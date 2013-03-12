@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.test"
+    package="com.kevin.addressBook"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.ui.MainActivity"
+            android:name="com.kevin.addressBook.ui.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,9 +23,9 @@
             </intent-filter>
         </activity>
         
-        <activity android:name="com.example.ui.MainDetailActivity" > </activity>
-         <activity android:name="com.example.ui.MainAddActivity" > </activity>
-          <activity android:name="com.example.ui.MainEditActivity" > </activity>
+        <activity android:name="com.kevin.addressBook.ui.MainDetailActivity" > </activity>
+         <activity android:name="com.kevin.addressBook.ui.MainAddActivity" > </activity>
+          <activity android:name="com.kevin.addressBook.ui.MainEditActivity" > </activity>
         
     </application>
 

@@ -1,0 +1,38 @@
+<list>
+
+    <addressInfo id="" >
+
+        <name>
+姓名
+        </name>
+
+        <post>
+职务
+        </post>
+
+        <company>
+单位
+        </company>
+
+        <address>
+住址
+        </address>
+
+        <phoneNum>
+电话
+        </phoneNum>
+
+        <saleInfo>
+销售信息
+        </saleInfo>
+
+        <purchaseInfo>
+求购信息
+        </purchaseInfo>
+
+        <imageName>
+头像
+        </imageName>
+    </addressInfo>
+
+</list>
