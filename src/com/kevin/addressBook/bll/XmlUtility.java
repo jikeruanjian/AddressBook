@@ -20,8 +20,26 @@ import com.kevin.addressBook.model.Const;
 public class XmlUtility {
 
 	/**
-	 * ÔÚÒ»¸öxmlÎÄ¼þÖÐ£¬±éÀúxmlÎÄ¼þ£¬¸ù¾ÝElementµÄelementName£¬È¡³öËùÓÐ¸´ºÏÌõ¼þµÄElementÔªËØ£¬
-	 * °ÑËüÃÇ×ª»»ÎªjavabeanÀàÐÍ£¬²¢·ÅÈëListÖÐ·µ»Ø
+	 * ï¿½ï¿½ï¿½xmlï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½xmlï¿½Ä¼ï¿½×ªï¿½ï¿½ï¿½ï¿½Documentï¿½ï¿½ï¿½ó²¢·ï¿½ï¿½ï¿½
+	 */
+	public static Document getDocument(String fileUrl) {
+		if (fileUrl == null || fileUrl.equals(""))
+			return null;
+		File file = new File(fileUrl);
+		SAXReader reader = new SAXReader();
+		Document document = null;
+		try {
+			document = reader.read(file);
+		} catch (DocumentException e) {
+			document = DocumentHelper.createDocument();
+			document.addElement("list");// ï¿½ï¿½Úµï¿½
+		}
+		return document;
+	}
+
+	/**
+	 * ï¿½ï¿½Ò»ï¿½ï¿½xmlï¿½Ä¼ï¿½ï¿½Ð£ï¿½ï¿½ï¿½ï¿½ï¿½xmlï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Elementï¿½ï¿½elementNameï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ð¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ElementÔªï¿½Ø£ï¿½
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½Îªjavabeanï¿½ï¿½ï¿½Í£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Listï¿½Ð·ï¿½ï¿½ï¿½
 	 */
 	public static List<AddressInfo> parseDocToObject(Document doc) {
 		List<AddressInfo> result = new ArrayList<AddressInfo>();
@@ -37,7 +55,7 @@ public class XmlUtility {
 				if (attribute.getName().equals(Const.AddressInfo.ID)) {
 					String id = attribute.getValue();
 					if (id == null || id.equals("")) {
-						id = UUID.randomUUID().toString(); // Èç¹û»¹Ã»ÓÐIDµÄÖµ£¬ÔòÐèÒªÉú²úÒ»¸ö
+						id = UUID.randomUUID().toString(); // ï¿½ï¿½ï¿½Ã»ï¿½ï¿½IDï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½Ò»ï¿½ï¿½
 						attribute.setText(id);
 					}
 					ai.setId(id);
@@ -72,45 +90,39 @@ public class XmlUtility {
 	}
 
 	/**
-	 * ¸ù¾ÝxmlÎÄ¼þµÄÎÄ¼þÃû£¬°ÑxmlÎÄ¼þ×ª»»³ÉDocument¶ÔÏó²¢·µ»Ø
+	 * ï¿½ï¿½ï¿½ElementÔªï¿½Øµï¿½javabeanï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ElementÔªï¿½Øµï¿½elementNameï¿½ï¿½Element rootï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Element ï¿½ï¿½
 	 */
-	public static Document getDocument(String fileUrl) throws DocumentException {
-		if (fileUrl == null || fileUrl.equals(""))
-			return DocumentHelper.createDocument();
-		File file = new File(fileUrl);
-		SAXReader reader = new SAXReader();
-		Document document = reader.read(file);
-		return document;
+	public static boolean addElement(Element root, AddressInfo addressInfo) {
+		try {
+			Element element = root.addElement(Const.AddressInfo.ROWNAME);
+			addressInfo.setId(UUID.randomUUID().toString());
+			element.addAttribute(Const.AddressInfo.ID, addressInfo.getId());
+			element.addElement(Const.AddressInfo.NAME).setText(
+					addressInfo.getName());
+			element.addElement(Const.AddressInfo.POST).setText(
+					addressInfo.getPost());
+			element.addElement(Const.AddressInfo.ADDRESS).setText(
+					addressInfo.getAddress());
+			element.addElement(Const.AddressInfo.COMPANY).setText(
+					addressInfo.getCompany());
+			element.addElement(Const.AddressInfo.PHONENUM).setText(
+					addressInfo.getPhoneNum());
+			element.addElement(Const.AddressInfo.SALEINFO).setText(
+					addressInfo.getSaleInfo());
+			element.addElement(Const.AddressInfo.PURCHASEINFO).setText(
+					addressInfo.getPurchaseInfo());
+			element.addElement(Const.AddressInfo.IMAGENAME).setText(
+					addressInfo.getImageName());
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	/**
-	 * ¸ù¾ÝElementÔªËØµÄjavabean¶ÔÏóÒÔ¼°ElementÔªËØµÄelementNameÔÚElement rootÏÂÔö¼ÓÒ»¸öElement ¡£
+	 * ï¿½ï¿½ï¿½ElementÔªï¿½Øµï¿½javabeanï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ElementÔªï¿½Øµï¿½elementNameï¿½ï¿½Element rootï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Element ï¿½ï¿½
 	 */
-	public static void addElement(Element root, AddressInfo addressInfo) {
-		Element element = root.addElement(Const.AddressInfo.ROWNAME);
-		element.addAttribute(Const.AddressInfo.ID, addressInfo.getId());
-		element.addElement(Const.AddressInfo.NAME).setText(
-				addressInfo.getName());
-		element.addElement(Const.AddressInfo.POST).setText(
-				addressInfo.getPost());
-		element.addElement(Const.AddressInfo.ADDRESS).setText(
-				addressInfo.getAddress());
-		element.addElement(Const.AddressInfo.COMPANY).setText(
-				addressInfo.getCompany());
-		element.addElement(Const.AddressInfo.PHONENUM).setText(
-				addressInfo.getPhoneNum());
-		element.addElement(Const.AddressInfo.SALEINFO).setText(
-				addressInfo.getSaleInfo());
-		element.addElement(Const.AddressInfo.PURCHASEINFO).setText(
-				addressInfo.getPurchaseInfo());
-		element.addElement(Const.AddressInfo.IMAGENAME).setText(
-				addressInfo.getImageName());
-	}
-
-	/**
-	 * ¸ù¾ÝElementÔªËØµÄjavabean¶ÔÏóÒÔ¼°ElementÔªËØµÄelementNameÔÚElement rootÏÂÔö¼ÓÒ»¸öElement ¡£
-	 */
-	public static void editElement(Element root, AddressInfo addressInfo) {
+	public static boolean editElement(Element root, AddressInfo addressInfo) {
 		List<Element> elements = root.elements();
 		for (Element element : elements) {
 			Iterator it = element.attributeIterator();
@@ -148,12 +160,14 @@ public class XmlUtility {
 						}
 					}
 				}
+				return true;
 			}
 		}
+		return false;
 	}
 
 	/**
-	 * ÔÚDocument¶ÔÏóÖÐ£¬ÒÔelementName£¬attributeName£¬attributeValueÎª²ÎÊýÉ¾³ý¶ÔÓ¦µÄElementÔªËØ¡£
+	 * ï¿½ï¿½Documentï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½ï¿½ï¿½elementNameï¿½ï¿½attributeNameï¿½ï¿½attributeValueÎªï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ElementÔªï¿½Ø¡ï¿½
 	 */
 	public static boolean removeElementByAttribute(Document document, String id) {
 		List<Element> list = document.getRootElement().elements(
@@ -172,7 +186,7 @@ public class XmlUtility {
 	}
 
 	/**
-	 * °ÑDocument¶ÔÏóÓëfilePath¶ÔÓ¦µÄÎïÀíÎÄ¼þ½øÐÐÍ¬²½¡£
+	 * ï¿½ï¿½Documentï¿½ï¿½ï¿½ï¿½ï¿½ï¿½filePathï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½Í¬ï¿½ï¿½ï¿½ï¿½
 	 */
 	public static void writeDocumentToFile(Document document, String filePath)
 			throws IOException {

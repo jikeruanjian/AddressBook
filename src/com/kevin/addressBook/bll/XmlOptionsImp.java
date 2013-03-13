@@ -3,7 +3,6 @@ package com.kevin.addressBook.bll;
 import java.util.List;
 
 import org.dom4j.Document;
-import org.dom4j.DocumentException;
 
 import com.kevin.addressBook.model.AddressInfo;
 
@@ -18,48 +17,57 @@ public class XmlOptionsImp implements IXmlOptions {
 		// Exists only to defeat instantiation.
 	}
 
-	public static XmlOptionsImp getInstance(String path) {
-		if (instance == null) {
-			XmlOptionsImp.path = path;
-			try { //这里的方式还需要该动
-				XmlOptionsImp.doc = XmlUtility.getDocument(XmlOptionsImp.path);
-			} catch (DocumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+	public static XmlOptionsImp getInstance() {
+		if (instance == null || !XmlOptionsImp.path.equals(path)) {
+			XmlOptionsImp.doc = XmlUtility.getDocument(XmlOptionsImp.path);
 			instance = new XmlOptionsImp();
 		}
 		return instance;
+	}
+	
+	/**
+	 * 
+	 * @param path
+	 */
+	public static void setPath(String path){
+		XmlOptionsImp.path = path;
+		XmlOptionsImp.doc = XmlUtility.getDocument(XmlOptionsImp.path);
+		instance = new XmlOptionsImp();
 	}
 
 	@Override
 	public List<AddressInfo> getAllUsers() {
 
-		return null;
+		return XmlUtility.parseDocToObject(doc);
 	}
 
 	@Override
 	public AddressInfo getUserDetails(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		AddressInfo ai = null;
+		List<AddressInfo> aiList = XmlUtility.parseDocToObject(doc);
+		for (AddressInfo addressInfo : aiList) {
+			if (addressInfo.getId().equals(id)) {
+				ai = addressInfo;
+				break;
+			}
+		}
+		return ai;
 	}
 
 	@Override
 	public Boolean addUser(AddressInfo user) {
-		// TODO Auto-generated method stub
-		return null;
+		return XmlUtility.addElement(doc.getRootElement(), user);
 	}
 
 	@Override
 	public Boolean deleteUser(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		return XmlUtility.removeElementByAttribute(doc, id);
 	}
 
 	@Override
 	public Boolean editUser(AddressInfo user) {
 		// TODO Auto-generated method stub
-		return null;
+		return XmlUtility.editElement(doc.getRootElement(), user);
 	}
 
 }
