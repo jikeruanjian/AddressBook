@@ -38,8 +38,8 @@ public class XmlUtility {
 	}
 
 	/**
-	 * ��һ��xml�ļ��У�����xml�ļ������Element��elementName��ȡ�����и���������ElementԪ�أ�
-	 * ������ת��Ϊjavabean���ͣ�������List�з���
+	 * ��һ��xml�ļ��У�����xml�ļ������Element��elementName��ȡ�����и���������
+	 * ElementԪ�أ� ������ת��Ϊjavabean���ͣ�������List�з���
 	 */
 	public static List<AddressInfo> parseDocToObject(Document doc) {
 		List<AddressInfo> result = new ArrayList<AddressInfo>();
@@ -90,7 +90,8 @@ public class XmlUtility {
 	}
 
 	/**
-	 * ���ElementԪ�ص�javabean�����Լ�ElementԪ�ص�elementName��Element root������һ��Element ��
+	 * ���ElementԪ�ص�javabean�����Լ�ElementԪ�ص�elementName��Element
+	 * root������һ��Element ��
 	 */
 	public static boolean addElement(Element root, AddressInfo addressInfo) {
 		try {
@@ -115,12 +116,14 @@ public class XmlUtility {
 					addressInfo.getImageName());
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 	}
 
 	/**
-	 * ���ElementԪ�ص�javabean�����Լ�ElementԪ�ص�elementName��Element root������һ��Element ��
+	 * ���ElementԪ�ص�javabean�����Լ�ElementԪ�ص�elementName��Element
+	 * root������һ��Element ��
 	 */
 	public static boolean editElement(Element root, AddressInfo addressInfo) {
 		List<Element> elements = root.elements();
@@ -167,7 +170,8 @@ public class XmlUtility {
 	}
 
 	/**
-	 * ��Document�����У���elementName��attributeName��attributeValueΪ����ɾ���Ӧ��ElementԪ�ء�
+	 * ��Document�����У���elementName��attributeName��attributeValueΪ����ɾ���Ӧ��
+	 * ElementԪ�ء�
 	 */
 	public static boolean removeElementByAttribute(Document document, String id) {
 		List<Element> list = document.getRootElement().elements(
@@ -195,5 +199,4 @@ public class XmlUtility {
 		writer.flush();
 		writer.close();
 	}
-
 }

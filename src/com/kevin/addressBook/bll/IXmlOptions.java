@@ -1,5 +1,6 @@
 package com.kevin.addressBook.bll;
 
+import java.io.IOException;
 import java.util.List;
 import com.kevin.addressBook.model.AddressInfo;
 
@@ -11,36 +12,39 @@ import com.kevin.addressBook.model.AddressInfo;
 public interface IXmlOptions {
 	
 	/**
-	 * 获取所有用户
-	 * @return 所有有效用户的List集合
+	 * 锟斤拷取锟斤拷锟斤拷锟矫伙拷
+	 * @return 锟斤拷锟斤拷锟斤拷效锟矫伙拷锟斤拷List锟斤拷锟斤拷
 	 */
 	public List<AddressInfo> getAllUsers();
 	
 	/**
-	 * 通过用户ID获取一个用户的详细信息
+	 * 通锟斤拷锟矫伙拷ID锟斤拷取一锟斤拷锟矫伙拷锟斤拷锟斤拷细锟斤拷息
 	 * @param id
 	 * @return addressInfo
 	 */
 	public AddressInfo getUserDetails(String id); 
 	
 	/**
-	 * 增加一个用户
+	 * 锟斤拷锟斤拷一锟斤拷锟矫伙拷
 	 * @param user
 	 * @return
+	 * @throws IOException 
 	 */
-	public Boolean addUser(AddressInfo user);
+	public Boolean addUser(AddressInfo user) throws IOException;
 	
 	/**
-	 * 通过ID删除一个用户
+	 * 通锟斤拷ID删锟斤拷一锟斤拷锟矫伙拷
 	 * @param id
 	 * @return
+	 * @throws IOException 
 	 */
-	public Boolean deleteUser(String id);
+	public Boolean deleteUser(String id) throws IOException;
 	
 	/**
-	 * 修改用户信息
+	 * 锟睫革拷锟矫伙拷锟斤拷息
 	 * @param user
 	 * @return
+	 * @throws IOException 
 	 */
-	public Boolean editUser(AddressInfo user);
+	public Boolean editUser(AddressInfo user) throws IOException;
 }

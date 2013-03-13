@@ -1,8 +1,11 @@
 package com.kevin.addressBook.bll;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.dom4j.Document;
+
+import android.util.Log;
 
 import com.kevin.addressBook.model.AddressInfo;
 
@@ -37,7 +40,6 @@ public class XmlOptionsImp implements IXmlOptions {
 
 	@Override
 	public List<AddressInfo> getAllUsers() {
-
 		return XmlUtility.parseDocToObject(doc);
 	}
 
@@ -55,19 +57,35 @@ public class XmlOptionsImp implements IXmlOptions {
 	}
 
 	@Override
-	public Boolean addUser(AddressInfo user) {
-		return XmlUtility.addElement(doc.getRootElement(), user);
+	public Boolean addUser(AddressInfo user) throws IOException {
+		Log.i("write", "准备添加写");
+		if( XmlUtility.addElement(doc.getRootElement(), user)){
+			XmlUtility.writeDocumentToFile(doc, path);
+			Log.i("write", "写完了:"+doc.asXML());
+			return true;
+		}else{
+			Log.i("write", "添加失败");
+			return false;
+		}
 	}
 
 	@Override
-	public Boolean deleteUser(String id) {
-		return XmlUtility.removeElementByAttribute(doc, id);
+	public Boolean deleteUser(String id) throws IOException {
+		if( XmlUtility.removeElementByAttribute(doc, id)){
+			XmlUtility.writeDocumentToFile(doc, path);
+			return true;
+		}else
+			return false;
 	}
 
 	@Override
-	public Boolean editUser(AddressInfo user) {
+	public Boolean editUser(AddressInfo user) throws IOException {
 		// TODO Auto-generated method stub
-		return XmlUtility.editElement(doc.getRootElement(), user);
+		if( XmlUtility.editElement(doc.getRootElement(), user)){
+			XmlUtility.writeDocumentToFile(doc, path);
+			return true;
+		}else
+			return false;
 	}
 
 }

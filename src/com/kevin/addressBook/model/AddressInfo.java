@@ -1,73 +1,91 @@
 package com.kevin.addressBook.model;
 
 /**
- * ÓÃ»§ÐÅÏ¢
+ * ï¿½Ã»ï¿½ï¿½ï¿½Ï¢
+ * 
  * @author kevin
- *
+ * 
  */
 public class AddressInfo {
 
-	private String id;				//Î¨Ò»µÄ±àºÅ
-	private String name;			//ÐÕÃû
-	private String post;			//Ö°Îñ
-	private String company; 		//µ¥Î»
-	private String address; 		//µØÖ·
-	private String phoneNum;		//µç»°
-	private String saleInfo;		//³öÊÛÐÅÏ¢
-	private String purchaseInfo;	//Çó¹ºÐÅÏ¢
-	private String imageName;		//Í·Ïñ
-	
+	private String id = ""; // Î¨Ò»ï¿½Ä±ï¿½ï¿½
+	private String name = ""; // ï¿½ï¿½ï¿½ï¿½
+	private String post = ""; // Ö°ï¿½ï¿½
+	private String company = ""; // ï¿½ï¿½Î»
+	private String address = ""; // ï¿½ï¿½Ö·
+	private String phoneNum = ""; // ï¿½ç»°
+	private String saleInfo = ""; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
+	private String purchaseInfo = ""; // ï¿½ï¿½ï¿½ï¿½Ï¢
+	private String imageName = ""; // Í·ï¿½ï¿½
+
 	public String getId() {
 		return id;
 	}
+
 	public void setId(String id) {
 		this.id = id;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public String getPost() {
 		return post;
 	}
+
 	public void setPost(String post) {
 		this.post = post;
 	}
+
 	public String getCompany() {
 		return company;
 	}
+
 	public void setCompany(String company) {
 		this.company = company;
 	}
+
 	public String getAddress() {
 		return address;
 	}
+
 	public void setAddress(String address) {
 		this.address = address;
 	}
+
 	public String getPhoneNum() {
 		return phoneNum;
 	}
+
 	public void setPhoneNum(String phoneNum) {
 		this.phoneNum = phoneNum;
 	}
+
 	public String getSaleInfo() {
 		return saleInfo;
 	}
+
 	public void setSaleInfo(String saleInfo) {
 		this.saleInfo = saleInfo;
 	}
+
 	public String getPurchaseInfo() {
 		return purchaseInfo;
 	}
+
 	public void setPurchaseInfo(String purchaseInfo) {
 		this.purchaseInfo = purchaseInfo;
 	}
+
 	public String getImageName() {
 		return imageName;
 	}
+
 	public void setImageName(String imageName) {
 		this.imageName = imageName;
 	}

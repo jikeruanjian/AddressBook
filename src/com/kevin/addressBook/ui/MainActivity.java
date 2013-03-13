@@ -1,6 +1,7 @@
 package com.kevin.addressBook.ui;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,18 +114,28 @@ public class MainActivity extends BaseActivity {
 					// 初始化数据
 					String filePath = "/data"
 							+ Environment.getDataDirectory().getAbsolutePath()
-							+ "/" + "com.kevin.addressBook/" + "AddressBook.xml";
+							+ "/" + "com.kevin.addressBook/"
+							+ "AddressBook.xml";
 					SharedPreferences preferences = getSharedPreferences(
 							"config", Context.MODE_PRIVATE);
 					filePath = preferences.getString("filePath", filePath);
 
 					File file = new File(filePath);
 					if (!file.exists()) {
-						DBFileImporter.importDB(context,filePath, "AddressBook.xml");
+						DBFileImporter.importDB(context, filePath,
+								"AddressBook.xml");
 					}
 					XmlOptionsImp.setPath(filePath);
-					dataList = XmlOptionsImp.getInstance()
-							.getAllUsers();
+					AddressInfo x = new AddressInfo();
+					x.setAddress("长沙");
+					x.setName("张三");
+					x.setCompany("能讯");
+					try {
+						XmlOptionsImp.getInstance().addUser(x);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					dataList = XmlOptionsImp.getInstance().getAllUsers();
 				}
 				hideProgressDialog();
 				Message msg = new Message();
@@ -174,11 +185,10 @@ public class MainActivity extends BaseActivity {
 			} else {
 				holder = (ViewHolder) convertView.getTag();// 取出ViewHolder对象
 			}
-			AddressInfo entity = (AddressInfo)dataList.get(position);
+			AddressInfo entity = (AddressInfo) dataList.get(position);
 			holder.name.setText(entity.getName());
 			holder.tel.setText(entity.getId());
 			
-			XmlOptionsImp.getInstance().addUser(entity);
 
 			((MainActivity) context).setIOSListItemBg(position, getCount(),
 					convertView);
