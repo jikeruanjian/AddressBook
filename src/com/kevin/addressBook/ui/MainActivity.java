@@ -1,20 +1,24 @@
 package com.kevin.addressBook.ui;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.kevin.addressBook.bll.DBFileImporter;
 import com.kevin.addressBook.bll.XmlOptionsImp;
-import com.kevin.addressBook.bll.XmlUtility;
 import com.kevin.addressBook.model.AddressInfo;
+import com.kevin.addressBook.tools.MyFileBrowser;
 import com.kevin.addressBook.ui.MainActivity.MainActivityListAdapter.ViewHolder;
 import com.kevin.addressBook.R;
+
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -22,6 +26,7 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -38,11 +43,13 @@ public class MainActivity extends BaseActivity {
 	private ListView list;
 	private static List dataList = new ArrayList();
 	private ViewHolder holder;
+	private AlertDialog.Builder builder = null;
+	private AlertDialog alertDialog = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);// Ìî³ä±êÌâÀ¸
+		requestWindowFeature(Window.FEATURE_NO_TITLE);// å¡«å……æ ‡é¢˜æ 
 		setContentView(R.layout.main_list);
 
 		EditText select = (EditText) this.findViewById(R.id.main_list_seacher);
@@ -53,7 +60,7 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
-				case 0: { // ÖØĞÂ¼ÓÔØÊı¾İ
+				case 0: { // é‡æ–°åŠ è½½æ•°æ®
 					list.setAdapter(new MainActivityListAdapter(context,
 							dataList));
 					hideProgressDialog();
@@ -81,16 +88,36 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void afterTextChanged(Editable s) {
 				// TODO Auto-generated method stub
+				final String index = s.toString();
+				showProgressDialog("æ­£åœ¨åˆå§‹åŒ–æ•°æ®...");
+				// åˆå§‹åŒ–ç•Œé¢æ•°æ®
+				new Thread(new Runnable() {
 
+					@Override
+					public void run() {
+						// dataList = XmlOptionsImp.getInstance().;
+						// dataList = new ToolPDBll()
+						// .getAllCanStockCountSafeTools(index);
+						Message msg = new Message();
+						msg.what = 0;
+						handler.sendMessage(msg);
+					}
+				}).start();
 			}
 		});
 
 		list.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				// TODO Auto-generated method stub
-
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// ç‚¹å‡»itemè¿›å…¥è¯¦ç»†ç•Œé¢ æ˜¾ç¤ºè¯¦ç»†ä¿¡æ¯
+				AddressInfo entity = (AddressInfo) dataList.get(position);
+				Intent intent = new Intent(context, MainEditActivity.class);
+				Bundle bundle = new Bundle();
+				String toolId = entity.getId();
+				bundle.putString("toolID", toolId);
+				intent.putExtras(bundle);
+				context.startActivity(intent);
 			}
 		});
 
@@ -104,14 +131,14 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 
-		showProgressDialog("ÕıÔÚ³õÊ¼»¯Êı¾İ...");
-		// ³õÊ¼»¯½çÃæÊı¾İ
+		showProgressDialog("æ­£åœ¨åˆå§‹åŒ–æ•°æ®...");
+		// åˆå§‹åŒ–ç•Œé¢æ•°æ®
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				if (dataList.size() == 0) {
-					System.out.println("ÖØĞÂ×°ÔØÁË...");
-					// ³õÊ¼»¯Êı¾İ
+					System.out.println("é‡æ–°è£…è½½äº†...");
+					// åˆå§‹åŒ–æ•°æ®
 					String filePath = "/data"
 							+ Environment.getDataDirectory().getAbsolutePath()
 							+ "/" + "com.kevin.addressBook/"
@@ -126,15 +153,6 @@ public class MainActivity extends BaseActivity {
 								"AddressBook.xml");
 					}
 					XmlOptionsImp.setPath(filePath);
-					AddressInfo x = new AddressInfo();
-					x.setAddress("³¤É³");
-					x.setName("ÕÅÈı");
-					x.setCompany("ÄÜÑ¶");
-					try {
-						XmlOptionsImp.getInstance().addUser(x);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
 					dataList = XmlOptionsImp.getInstance().getAllUsers();
 				}
 				hideProgressDialog();
@@ -151,9 +169,80 @@ public class MainActivity extends BaseActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		// getMenuInflater().inflate(R.menu.main, menu);
+		menu.add(1, 1, 1, "é€‰æ‹©æ–‡ä»¶");
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		switch (item.getItemId()) {
+		// å“åº”æ¯ä¸ªèœå•é¡¹(é€šè¿‡èœå•é¡¹çš„ID)
+		case 1:
+			final MyFileBrowser fileBrowserView = new MyFileBrowser(
+					MainActivity.this);
+			builder = new AlertDialog.Builder(MainActivity.this)
+					.setIcon(R.drawable.ic_launcher)
+					.setTitle("é€‰æ‹©æ–‡ä»¶ï¼ˆtxtã€xmlï¼‰")
+					.setView(fileBrowserView)
+					.setPositiveButton("ç¡®å®š",
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									// ï¿½ï¿½ï¿½ï¿½Â¼ï¿½.
+									List<File> selectedFiles = null;
+									selectedFiles = fileBrowserView
+											.getSelectedFiles();
+
+									// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ label
+									StringBuilder text = new StringBuilder("|");
+									if (selectedFiles == null)
+										return;
+									for (File file : selectedFiles) {
+										text.append(file.getName() + "|");
+									}
+									for (File file : selectedFiles) {
+										String fileName = file.getName();
+										String[] fs = fileName.split("\\.");
+										if (fs.length == 2) {
+											String hz = fs[1];
+											if (hz.equals("txt")
+													|| hz.equals("xml")) {
+												String filePath = file
+														.getPath();
+												System.out.println("å¾—åˆ°çš„æ–‡ä»¶è·¯å¾„ä¸ºï¼š"
+														+ filePath);
+												// ä¿å­˜è·¯å¾„
+												SharedPreferences preferences = getSharedPreferences(
+														"config",
+														Context.MODE_PRIVATE);
+												Editor editor = preferences
+														.edit();
+												editor.putString("filePath",
+														filePath);
+												XmlOptionsImp.setPath(filePath);
+											}
+										}
+									}
+									dialog.cancel();
+								}
+							})
+					.setNegativeButton("å–æ¶ˆ",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									dialog.cancel();
+								}
+							});
+			alertDialog = builder.create();
+			alertDialog.show();
+		}
+		return super.onOptionsItemSelected(item);
+
 	}
 
 	class MainActivityListAdapter extends ListAdapter {
@@ -173,7 +262,7 @@ public class MainActivity extends BaseActivity {
 			if (convertView == null) {
 				convertView = mInflater.inflate(R.layout.main_list_item, null);
 				holder = new ViewHolder();
-				/** µÃµ½¸÷¸ö¿Ø¼şµÄ¶ÔÏó */
+				/** å¾—åˆ°å„ä¸ªæ§ä»¶çš„å¯¹è±¡ */
 				holder.name = (TextView) convertView
 						.findViewById(R.id.main_list_item_name);
 				holder.tel = (TextView) convertView
@@ -181,14 +270,21 @@ public class MainActivity extends BaseActivity {
 				holder.photo = (ImageView) convertView
 						.findViewById(R.id.main_list_item_photo);
 
-				convertView.setTag(holder);// °ó¶¨ViewHolder¶ÔÏó
+				convertView.setTag(holder);// ç»‘å®šViewHolderå¯¹è±¡
 			} else {
-				holder = (ViewHolder) convertView.getTag();// È¡³öViewHolder¶ÔÏó
+				holder = (ViewHolder) convertView.getTag();// å–å‡ºViewHolderå¯¹è±¡
 			}
 			AddressInfo entity = (AddressInfo) dataList.get(position);
-			holder.name.setText(entity.getName());
-			holder.tel.setText(entity.getId());
-			
+			holder.name.setText("å§“åï¼š"+entity.getName());
+			holder.tel.setText("ç”µè¯ï¼š"+entity.getPhoneNum());
+			String path = entity.getImageName();
+			if (path != null) {
+				Bitmap bitmap = BitmapFactory.decodeFile(entity.getImageName());
+				holder.photo.setImageBitmap(bitmap);
+			} else {
+				holder.photo.setImageResource(R.drawable.ic_launcher);
+				// holder.photo.getResources().getDrawable(R.drawable.ic_launcher);
+			}
 
 			((MainActivity) context).setIOSListItemBg(position, getCount(),
 					convertView);
@@ -196,7 +292,7 @@ public class MainActivity extends BaseActivity {
 			return convertView;
 		}
 
-		/** ´æ·Å¿Ø¼ş */
+		/** å­˜æ”¾æ§ä»¶ */
 		public final class ViewHolder {
 			public TextView name;
 			public TextView tel;

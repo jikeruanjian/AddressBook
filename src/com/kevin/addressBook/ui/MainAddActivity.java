@@ -1,8 +1,11 @@
 package com.kevin.addressBook.ui;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
+import com.kevin.addressBook.bll.XmlOptionsImp;
+import com.kevin.addressBook.model.AddressInfo;
 import com.kevin.addressBook.tools.MyFileBrowser;
 import com.kevin.addressBook.tools.SDPictureService;
 import com.kevin.addressBook.R;
@@ -16,39 +19,107 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 public class MainAddActivity extends BaseActivity{
 	private List<String> path ;
 	private AlertDialog.Builder builder = null;
 	private AlertDialog alertDialog = null;
 	private View textview;
+	private EditText name;
+	private EditText tel;
+	private EditText job;
+	private EditText unit;
+	private EditText address;
+	private EditText sell;
+	private EditText ask;
+	private ImageView photo;
+	private String filePaht;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);// Ìî³ä±êÌâÀ¸
+		requestWindowFeature(Window.FEATURE_NO_TITLE);// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		setContentView(R.layout.main_edit);
 		
 		path = SDPictureService.imagePaths;
 		
+		 name=(EditText) this.findViewById(R.id.main_edit_name);
+		 tel=(EditText) this.findViewById(R.id.main_edit_tel);
+		 job=(EditText) this.findViewById(R.id.main_edit_job);
+		 unit=(EditText) this.findViewById(R.id.main_edit_unit);
+		 address=(EditText) this.findViewById(R.id.main_edit_adds);
+		 sell=(EditText) this.findViewById(R.id.main_edit_sell);
+		 ask=(EditText) this.findViewById(R.id.main_edit_ask);
+		 photo=(ImageView) this.findViewById(R.id.main_edit_photo);
+		
+		Button save=(Button) this.findViewById(R.id.main_edit_save);
+		save.setText("ä¿å­˜");
+		save.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				AddressInfo ai=new AddressInfo();
+				System.out.println("==========="+name.getText().toString());
+				ai.setName(name.getText().toString());
+				ai.setPhoneNum(tel.getText().toString());
+				ai.setPost(job.getText().toString());
+				ai.setCompany(unit.getText().toString());
+				ai.setAddress(address.getText().toString());
+				ai.setSaleInfo(sell.getText().toString());
+				ai.setPurchaseInfo(ask.getText().toString());
+				ai.setImageName(filePaht);
+				//å¾—åˆ°å›¾ç‰‡è·¯å¾„å¹¶å­˜å…¥xmlæ–‡ä»¶ä¸­ 
+				try {
+					if(XmlOptionsImp.getInstance().addUser(ai)){
+						Toast.makeText(context, "æ·»åŠ æˆåŠŸï¼", Toast.LENGTH_SHORT).show();
+					}else{
+						Toast.makeText(context, "æ·»åŠ å¤±è´¥ï¼", Toast.LENGTH_SHORT).show();	
+					}
+				} catch (IOException e) {
+//					Toast.makeText(context, "æ·»åŠ å¤±è´¥ï¼", Toast.LENGTH_SHORT).show();
+					e.printStackTrace();
+				}
+				
+			}
+		});
+		
+		Button cancel=(Button) this.findViewById(R.id.main_edit_cancel);
+		cancel.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				name.setText("");
+				tel.setText("");
+				job.setText("");
+				unit.setText("");
+				address.setText("");
+				sell.setText("");
+				ask.setText("");
+				photo.setBackgroundResource(R.drawable.ic_launcher);
+			}
+		});
+		
 		Button changePhoto = (Button) this.findViewById(R.id.main_edit_change_photo);
 		changePhoto.setOnClickListener(new OnClickListener() {
+			@Override
 			public void onClick(View v) {
 				
 				final MyFileBrowser fileBrowserView = new MyFileBrowser(
 						MainAddActivity.this);
 				builder = new AlertDialog.Builder(MainAddActivity.this)
-						.setIcon(R.drawable.ic_launcher)
-						.setTitle("Ñ¡ÔñÏàÆ¬£¨jpg¡¢png¡¢gif£©")
-						.setView(fileBrowserView)
-						.setPositiveButton("È·¶¨",
+				.setIcon(R.drawable.ic_launcher)
+				.setTitle("é€‰æ‹©ç›¸ç‰‡ï¼ˆjpgã€pngã€gifï¼‰")
+				.setView(fileBrowserView)
+						.setPositiveButton("ç¡®å®š",
 								new DialogInterface.OnClickListener() {
+									@Override
 									public void onClick(DialogInterface dialog,
 											int which) {
-										// ×ó¼üÊÂ¼ş.
+										// ï¿½ï¿½ï¿½ï¿½Â¼ï¿½.
 										List<File> selectedFiles = null;
 										selectedFiles = fileBrowserView.getSelectedFiles();
 
-										// ¸üĞÂÏÔÊ¾µ±Ç°Ïà²áµÄ label
+										// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ label
 										StringBuilder text = new StringBuilder(
 												"|");
 										if (selectedFiles == null)
@@ -64,21 +135,21 @@ public class MainAddActivity extends BaseActivity{
 												if (hz.equals("jpg")
 														|| hz.equals("png")
 														|| hz.equals("gif")) {
-													String filePaht = file.getPath();
+													filePaht = file.getPath();
 													Bitmap bitmap = BitmapFactory.decodeFile(filePaht);
-//													userPhoto.setImageBitmap(bitmap);//¸ü»»µÄÄÇÕÅÍ¼Æ¬
+													photo.setImageBitmap(bitmap);
 												}
 											}
 										}
 										dialog.cancel();
 									}
 								})
-						.setNegativeButton("È¡Ïû",
+						.setNegativeButton("å–æ¶ˆ",
 								new DialogInterface.OnClickListener() {
 
+									@Override
 									public void onClick(DialogInterface dialog,
 											int which) {
-										// ÓÒ¼üÊÂ¼ş
 										dialog.cancel();
 									}
 								});

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <!-- ShareDialog -->
+    <style name="Theme.ShareDialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowBackground">@drawable/photo_fill_box</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+    
+</resources>

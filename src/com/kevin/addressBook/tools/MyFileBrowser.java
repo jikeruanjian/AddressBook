@@ -88,6 +88,7 @@ public class MyFileBrowser extends ListView implements
 		updateList();
 	}
 
+	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		File file=fileList.get(position);
@@ -118,21 +119,25 @@ public class MyFileBrowser extends ListView implements
 
 	class MyFileListAdapter extends BaseAdapter implements OnCheckedChangeListener{
 	
+		@Override
 		public int getCount() {
 
 			return fileList.size();
 		}
 	
+		@Override
 		public Object getItem(int position) {
 
 			return fileList.get(position);
 		}
 	
+		@Override
 		public long getItemId(int position) {
 
 			return position;
 		}
 	
+		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 
 			LayoutInflater layoutInflate=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -150,7 +155,7 @@ public class MyFileBrowser extends ListView implements
 			else{
 				fileName=subFile.getName();
 				if(fileName.equals(""))
-					fileName="ÎÄ¼þÃûÎ´Öª";
+					fileName="ï¿½Ä¼ï¿½ï¿½ï¿½Î´Öª";
 			}
 			
 			file_image.setImageResource(fileIconRes);
@@ -183,15 +188,16 @@ public class MyFileBrowser extends ListView implements
 			return fileIconRes;
 		}
 
+		@Override
 		public void onCheckedChanged(CompoundButton buttonView,
 				boolean isChecked) {
 
 			if(isChecked){
-				if(!listSet.contains((Integer)buttonView.getTag()))
+				if(!listSet.contains(buttonView.getTag()))
 					listSet.add((Integer)buttonView.getTag());
 			}else{
-				if(listSet.contains((Integer)buttonView.getTag()))
-					listSet.remove((Integer)buttonView.getTag());
+				if(listSet.contains(buttonView.getTag()))
+					listSet.remove(buttonView.getTag());
 			}
 			
 		}

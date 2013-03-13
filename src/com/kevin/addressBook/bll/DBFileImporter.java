@@ -5,8 +5,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.apache.http.util.ByteArrayBuffer;
+
+import com.kevin.addressBook.model.AddressInfo;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -48,4 +51,13 @@ public class DBFileImporter {
 
 	}
 
+	/**
+	 * 筛选
+	 * @param key
+	 * @return
+	 */
+	public static List<AddressInfo> searchWithKey(String key){
+		List<AddressInfo> result = null;
+		return result;
+	}
 }
