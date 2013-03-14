@@ -1,6 +1,9 @@
 package com.kevin.addressBook.ui;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -15,6 +18,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -37,6 +41,7 @@ public class MainAddActivity extends BaseActivity{
 	private EditText ask;
 	private ImageView photo;
 	private String filePaht;
+	private static final String picasaPath = Environment.getExternalStorageDirectory()+"/pic";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -72,6 +77,29 @@ public class MainAddActivity extends BaseActivity{
 				//得到图片路径并存入xml文件中 
 				try {
 					if(XmlOptionsImp.getInstance().addUser(ai)){
+						//将此图片复制到存xml的文件夹下
+						if(Environment.getExternalStorageState()
+								.equals(Environment.MEDIA_MOUNTED)){
+							//在sd卡中创建picasa文件夹
+							File files = new File(picasaPath);
+							if(!files.isDirectory()){
+								files.mkdirs();
+							}
+							String str[]=filePaht.split("/");
+							try {
+								File saveFile = new File(picasaPath,str[str.length-1]);
+								if(!saveFile.exists()){
+								FileInputStream fin = new FileInputStream(filePaht);
+								FileOutputStream outStream = new FileOutputStream(saveFile);
+								copyfile(fin,outStream);//调用自定义拷贝文件方法
+								}
+							} catch (FileNotFoundException e) {
+								e.printStackTrace();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+						
 						Toast.makeText(context, "添加成功！", Toast.LENGTH_SHORT).show();
 					}else{
 						Toast.makeText(context, "添加失败！", Toast.LENGTH_SHORT).show();	
@@ -160,6 +188,18 @@ public class MainAddActivity extends BaseActivity{
 
 	}
 
-	
+	/**自定义拷贝文件*/
+	private  void copyfile(FileInputStream fin,FileOutputStream fou) 
+			throws IOException{
+		byte[] buffer = new byte[1024];
+		int nLength;
+		fou.flush();
+		while((nLength=fin.read(buffer))!=-1){
+			fou.write(buffer,0,nLength);
+		}
+		fou.flush();
+		fin.close();
+		fou.close();
+	}
 	
 }
