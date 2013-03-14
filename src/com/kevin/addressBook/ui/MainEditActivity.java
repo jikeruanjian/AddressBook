@@ -44,7 +44,6 @@ public class MainEditActivity extends BaseActivity{
 	private Button edit;
 	private int isclicked=0;
 	private String filePaht;
-	private static final String picasaPath = Environment.getExternalStorageDirectory()+"/pic";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -148,13 +147,18 @@ public class MainEditActivity extends BaseActivity{
 							if(Environment.getExternalStorageState()
 									.equals(Environment.MEDIA_MOUNTED)){
 								//在sd卡中创建picasa文件夹
-								File files = new File(picasaPath);
+								String dir=XmlOptionsImp.getPath()
+										.substring(
+												0,
+												XmlOptionsImp.getPath()
+														.lastIndexOf("/"))+"/AddressBookPic";
+								File files = new File(dir);
 								if(!files.isDirectory()){
 									files.mkdirs();
 								}
 								String str[]=filePaht.split("/");
 								try {
-									File saveFile = new File(picasaPath,str[str.length-1]);
+									File saveFile = new File(dir,str[str.length-1]);
 									if(!saveFile.exists()){
 									FileInputStream fin = new FileInputStream(filePaht);
 									FileOutputStream outStream = new FileOutputStream(saveFile);

@@ -14,7 +14,9 @@ import com.kevin.addressBook.tools.SDPictureService;
 import com.kevin.addressBook.R;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -27,8 +29,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class MainAddActivity extends BaseActivity{
-	private List<String> path ;
+public class MainAddActivity extends BaseActivity {
+	private List<String> path;
 	private AlertDialog.Builder builder = null;
 	private AlertDialog alertDialog = null;
 	private View textview;
@@ -39,33 +41,39 @@ public class MainAddActivity extends BaseActivity{
 	private EditText address;
 	private EditText sell;
 	private EditText ask;
+	private EditText qqNun;
+	private EditText mailBox;
+	private EditText url;
 	private ImageView photo;
 	private String filePaht;
-	private static final String picasaPath = Environment.getExternalStorageDirectory()+"/pic";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);// ��������
 		setContentView(R.layout.main_edit);
-		
+
 		path = SDPictureService.imagePaths;
-		
-		 name=(EditText) this.findViewById(R.id.main_edit_name);
-		 tel=(EditText) this.findViewById(R.id.main_edit_tel);
-		 job=(EditText) this.findViewById(R.id.main_edit_job);
-		 unit=(EditText) this.findViewById(R.id.main_edit_unit);
-		 address=(EditText) this.findViewById(R.id.main_edit_adds);
-		 sell=(EditText) this.findViewById(R.id.main_edit_sell);
-		 ask=(EditText) this.findViewById(R.id.main_edit_ask);
-		 photo=(ImageView) this.findViewById(R.id.main_edit_photo);
-		
-		Button save=(Button) this.findViewById(R.id.main_edit_save);
+
+		name = (EditText) this.findViewById(R.id.main_edit_name);
+		tel = (EditText) this.findViewById(R.id.main_edit_tel);
+		job = (EditText) this.findViewById(R.id.main_edit_job);
+		unit = (EditText) this.findViewById(R.id.main_edit_unit);
+		address = (EditText) this.findViewById(R.id.main_edit_adds);
+		sell = (EditText) this.findViewById(R.id.main_edit_sell);
+		ask = (EditText) this.findViewById(R.id.main_edit_ask);
+		photo = (ImageView) this.findViewById(R.id.main_edit_photo);
+		qqNun=(EditText) this.findViewById(R.id.main_edit_qqNum);
+		mailBox=(EditText) this.findViewById(R.id.main_edit_mailbox);
+		url=(EditText) this.findViewById(R.id.main_edit_url);
+
+		Button save = (Button) this.findViewById(R.id.main_edit_save);
 		save.setText("保存");
 		save.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				AddressInfo ai=new AddressInfo();
-				System.out.println("==========="+name.getText().toString());
+				AddressInfo ai = new AddressInfo();
+				System.out.println("===========" + name.getText().toString());
 				ai.setName(name.getText().toString());
 				ai.setPhoneNum(tel.getText().toString());
 				ai.setPost(job.getText().toString());
@@ -74,24 +82,31 @@ public class MainAddActivity extends BaseActivity{
 				ai.setSaleInfo(sell.getText().toString());
 				ai.setPurchaseInfo(ask.getText().toString());
 				ai.setImageName(filePaht);
-				//得到图片路径并存入xml文件中 
+				// 得到图片路径并存入xml文件中
 				try {
-					if(XmlOptionsImp.getInstance().addUser(ai)){
-						//将此图片复制到存xml的文件夹下
-						if(Environment.getExternalStorageState()
-								.equals(Environment.MEDIA_MOUNTED)){
-							//在sd卡中创建picasa文件夹
-							File files = new File(picasaPath);
-							if(!files.isDirectory()){
+					if (XmlOptionsImp.getInstance().addUser(ai)) {
+						// 将此图片复制到存xml的文件夹下
+						if (Environment.getExternalStorageState().equals(
+								Environment.MEDIA_MOUNTED)) {
+							// 在sd卡中创建picasa文件夹
+							String dir=XmlOptionsImp.getPath()
+							.substring(
+									0,
+									XmlOptionsImp.getPath()
+											.lastIndexOf("/"))+"/AddressBookPic";
+							File files = new File(dir);
+							if (!files.isDirectory()) {
 								files.mkdirs();
 							}
-							String str[]=filePaht.split("/");
+							String str[] = filePaht.split("/");
 							try {
-								File saveFile = new File(picasaPath,str[str.length-1]);
-								if(!saveFile.exists()){
-								FileInputStream fin = new FileInputStream(filePaht);
-								FileOutputStream outStream = new FileOutputStream(saveFile);
-								copyfile(fin,outStream);//调用自定义拷贝文件方法
+								File saveFile = new File(dir, str[str.length - 1]);
+								if (!saveFile.exists()) {
+									FileInputStream fin = new FileInputStream(
+											filePaht);
+									FileOutputStream outStream = new FileOutputStream(
+											saveFile);
+									copyfile(fin, outStream);// 调用自定义拷贝文件方法
 								}
 							} catch (FileNotFoundException e) {
 								e.printStackTrace();
@@ -99,20 +114,23 @@ public class MainAddActivity extends BaseActivity{
 								e.printStackTrace();
 							}
 						}
-						
-						Toast.makeText(context, "添加成功！", Toast.LENGTH_SHORT).show();
-					}else{
-						Toast.makeText(context, "添加失败！", Toast.LENGTH_SHORT).show();	
+
+						Toast.makeText(context, "添加成功！", Toast.LENGTH_SHORT)
+								.show();
+					} else {
+						Toast.makeText(context, "添加失败！", Toast.LENGTH_SHORT)
+								.show();
 					}
 				} catch (IOException e) {
-//					Toast.makeText(context, "添加失败！", Toast.LENGTH_SHORT).show();
+					// Toast.makeText(context, "添加失败！",
+					// Toast.LENGTH_SHORT).show();
 					e.printStackTrace();
 				}
-				
+
 			}
 		});
-		
-		Button cancel=(Button) this.findViewById(R.id.main_edit_cancel);
+
+		Button cancel = (Button) this.findViewById(R.id.main_edit_cancel);
 		cancel.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -126,18 +144,19 @@ public class MainAddActivity extends BaseActivity{
 				photo.setBackgroundResource(R.drawable.ic_launcher);
 			}
 		});
-		
-		Button changePhoto = (Button) this.findViewById(R.id.main_edit_change_photo);
+
+		Button changePhoto = (Button) this
+				.findViewById(R.id.main_edit_change_photo);
 		changePhoto.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
+
 				final MyFileBrowser fileBrowserView = new MyFileBrowser(
 						MainAddActivity.this);
 				builder = new AlertDialog.Builder(MainAddActivity.this)
-				.setIcon(R.drawable.ic_launcher)
-				.setTitle("选择相片（jpg、png、gif）")
-				.setView(fileBrowserView)
+						.setIcon(R.drawable.ic_launcher)
+						.setTitle("选择相片（jpg、png、gif）")
+						.setView(fileBrowserView)
 						.setPositiveButton("确定",
 								new DialogInterface.OnClickListener() {
 									@Override
@@ -145,7 +164,8 @@ public class MainAddActivity extends BaseActivity{
 											int which) {
 										// ����¼�.
 										List<File> selectedFiles = null;
-										selectedFiles = fileBrowserView.getSelectedFiles();
+										selectedFiles = fileBrowserView
+												.getSelectedFiles();
 
 										// ������ʾ��ǰ���� label
 										StringBuilder text = new StringBuilder(
@@ -164,7 +184,8 @@ public class MainAddActivity extends BaseActivity{
 														|| hz.equals("png")
 														|| hz.equals("gif")) {
 													filePaht = file.getPath();
-													Bitmap bitmap = BitmapFactory.decodeFile(filePaht);
+													Bitmap bitmap = BitmapFactory
+															.decodeFile(filePaht);
 													photo.setImageBitmap(bitmap);
 												}
 											}
@@ -188,18 +209,18 @@ public class MainAddActivity extends BaseActivity{
 
 	}
 
-	/**自定义拷贝文件*/
-	private  void copyfile(FileInputStream fin,FileOutputStream fou) 
-			throws IOException{
+	/** 自定义拷贝文件 */
+	private void copyfile(FileInputStream fin, FileOutputStream fou)
+			throws IOException {
 		byte[] buffer = new byte[1024];
 		int nLength;
 		fou.flush();
-		while((nLength=fin.read(buffer))!=-1){
-			fou.write(buffer,0,nLength);
+		while ((nLength = fin.read(buffer)) != -1) {
+			fou.write(buffer, 0, nLength);
 		}
 		fou.flush();
 		fin.close();
 		fou.close();
 	}
-	
+
 }

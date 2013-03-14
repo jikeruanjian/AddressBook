@@ -14,6 +14,11 @@ public class XmlOptionsImp implements IXmlOptions {
 	private static XmlOptionsImp instance = null;
 
 	private static String path = "";
+
+	public static String getPath() {
+		return path;
+	}
+
 	private static Document doc = null;
 
 	private XmlOptionsImp() {
@@ -27,12 +32,12 @@ public class XmlOptionsImp implements IXmlOptions {
 		}
 		return instance;
 	}
-	
+
 	/**
 	 * 
 	 * @param path
 	 */
-	public static void setPath(String path){
+	public static void setPath(String path) {
 		XmlOptionsImp.path = path;
 		XmlOptionsImp.doc = XmlUtility.getDocument(XmlOptionsImp.path);
 		instance = new XmlOptionsImp();
@@ -59,11 +64,11 @@ public class XmlOptionsImp implements IXmlOptions {
 	@Override
 	public Boolean addUser(AddressInfo user) throws IOException {
 		Log.i("write", "准备添加写");
-		if( XmlUtility.addElement(doc.getRootElement(), user)){
+		if (XmlUtility.addElement(doc.getRootElement(), user)) {
 			XmlUtility.writeDocumentToFile(doc, path);
-			Log.i("write", "写完了:"+doc.asXML());
+			Log.i("write", "写完了:" + doc.asXML());
 			return true;
-		}else{
+		} else {
 			Log.i("write", "添加失败");
 			return false;
 		}
@@ -71,20 +76,20 @@ public class XmlOptionsImp implements IXmlOptions {
 
 	@Override
 	public Boolean deleteUser(String id) throws IOException {
-		if( XmlUtility.removeElementByAttribute(doc, id)){
+		if (XmlUtility.removeElementByAttribute(doc, id)) {
 			XmlUtility.writeDocumentToFile(doc, path);
 			return true;
-		}else
+		} else
 			return false;
 	}
 
 	@Override
 	public Boolean editUser(AddressInfo user) throws IOException {
 		// TODO Auto-generated method stub
-		if( XmlUtility.editElement(doc.getRootElement(), user)){
+		if (XmlUtility.editElement(doc.getRootElement(), user)) {
 			XmlUtility.writeDocumentToFile(doc, path);
 			return true;
-		}else
+		} else
 			return false;
 	}
 
