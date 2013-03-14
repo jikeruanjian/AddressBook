@@ -1,6 +1,7 @@
 package com.kevin.addressBook.bll;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import org.dom4j.Document;
@@ -8,6 +9,7 @@ import org.dom4j.Document;
 import android.util.Log;
 
 import com.kevin.addressBook.model.AddressInfo;
+import com.kevin.addressBook.tools.ComparatorUser;
 
 public class XmlOptionsImp implements IXmlOptions {
 
@@ -45,7 +47,12 @@ public class XmlOptionsImp implements IXmlOptions {
 
 	@Override
 	public List<AddressInfo> getAllUsers() {
-		return XmlUtility.parseDocToObject(doc);
+		List<AddressInfo> result = XmlUtility.parseDocToObject(doc);
+		if (result.size() > 0) {
+			ComparatorUser comparatorUser = new ComparatorUser();
+			Collections.sort(result, comparatorUser);
+		}
+		return result;
 	}
 
 	@Override

@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.http.util.ByteArrayBuffer;
@@ -23,15 +25,13 @@ import android.util.Log;
  */
 public class DBFileImporter {
 
-	public static void importDB(Context context,String filePath, String dbName) {
+	public static void importDB(Context context, String filePath, String dbName) {
 
 		AssetManager assetManager = context.getAssets();
-		String assetPath = "dbfiles";
-		String oldPath = assetPath + "/" + dbName;
 		InputStream inputStream = null;
 		try {
 			inputStream = assetManager.open(dbName);
-			
+
 			BufferedInputStream bis = new BufferedInputStream(inputStream);
 			ByteArrayBuffer baf = new ByteArrayBuffer(100);
 			int current = 0;
@@ -52,12 +52,20 @@ public class DBFileImporter {
 	}
 
 	/**
-	 * 筛选
+	 * 筛选,按照名称的
+	 * 
 	 * @param key
 	 * @return
 	 */
-	public static List<AddressInfo> searchWithKey(String key){
+	public static List<AddressInfo> searchWithKey(String key,
+			List<AddressInfo> allInfos) {
 		List<AddressInfo> result = null;
+		for (AddressInfo addressInfo : result) {
+			if (addressInfo.getName().contains(key)) {
+				result.add(addressInfo);
+			}
+		}
 		return result;
 	}
+
 }
