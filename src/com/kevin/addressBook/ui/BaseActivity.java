@@ -5,7 +5,6 @@ import com.kevin.addressBook.R;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -83,8 +82,8 @@ public class BaseActivity extends Activity {
 
 		if (progressDialog == null) {
 			try {
-				progressDialog = ProgressDialog.show(context, "���Ե�...",
-						"���ڵ�¼...", true);
+				progressDialog = ProgressDialog.show(context, "请稍等...",
+						"正在登录...", true);
 				progressDialog.setContentView(R.layout.custom_progress);
 				// progressDialog.setCancelable(true);
 				progressDialog.setOnKeyListener(new OnKeyListener() {
@@ -95,10 +94,10 @@ public class BaseActivity extends Activity {
 								&& arg2.getRepeatCount() == 0
 								&& arg2.getAction() == KeyEvent.ACTION_UP) {
 							new AlertDialog.Builder(BaseActivity.this)
-									.setTitle("����")
-									.setMessage("������δ��ɣ�����ֹͣ����Ӱ�쵽�������ʹ�ã��Ƿ�ֹͣ��")
+									.setTitle("警告")
+									.setMessage("处理尚未完成，现在停止可能影响到程序的正常使用，是否停止？")
 									.setPositiveButton(
-											"ȷ��",
+											"确定",
 											new DialogInterface.OnClickListener() {
 												@Override
 												public void onClick(
@@ -108,7 +107,7 @@ public class BaseActivity extends Activity {
 												}
 											})
 									.setNegativeButton(
-											"ȡ��",
+											"取消",
 											new DialogInterface.OnClickListener() {
 												@Override
 												public void onClick(
@@ -124,7 +123,7 @@ public class BaseActivity extends Activity {
 				});
 				View v = progressDialog.getWindow().getDecorView();
 				if (text == null) {
-					text = "���Ե�...";
+					text = "请稍等...";
 				}
 				setProgressText(v, text);
 			} catch (Exception e) {
@@ -133,7 +132,6 @@ public class BaseActivity extends Activity {
 		}
 
 	}
-
 	public void setProgressText(String text) {
 		View v = progressDialog.getWindow().getDecorView();
 		if (text == null) {
@@ -167,13 +165,12 @@ public class BaseActivity extends Activity {
 			try {
 				progressDialog.dismiss();
 			} catch (Exception e) {
-				e.printStackTrace(); // ���������Ѿ���ʧ������dismiss�ͻ���?����ֱ���̵�������
+				e.printStackTrace();
 			}
 			progressDialog = null;
 		}
 	}
 
-	// �����ں������л���ʱ�����
 	@Override
 	protected void onPause() {
 		super.onPause();

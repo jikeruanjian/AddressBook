@@ -7,11 +7,13 @@ import java.util.List;
 import com.kevin.addressBook.bll.DBFileImporter;
 import com.kevin.addressBook.bll.XmlOptionsImp;
 import com.kevin.addressBook.model.AddressInfo;
+import com.kevin.addressBook.tools.CustomTouchListener;
 import com.kevin.addressBook.tools.SelectFiles;
 import com.kevin.addressBook.ui.MainActivity.MainActivityListAdapter.ViewHolder;
 import com.kevin.addressBook.R;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,6 +26,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,9 +38,12 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends BaseActivity {
 	private ListView list;
@@ -55,7 +61,7 @@ public class MainActivity extends BaseActivity {
 
 		EditText select = (EditText) this.findViewById(R.id.main_list_seacher);
 		list = (ListView) this.findViewById(R.id.main_list);
-		Button add = (Button) this.findViewById(R.id.main_add);
+//		Button add = (Button) this.findViewById(R.id.main_add);
 
 		handler = new Handler() {
 			@Override
@@ -115,14 +121,15 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 
-		add.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(context, MainAddActivity.class);
-				context.startActivity(intent);
-			}
-		});
+//		add.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				Intent intent = new Intent(context, MainAddActivity.class);
+////				context.startActivity(intent);
+//				startActivityForResult(intent, 3);
+//			}
+//		});
 
 		showProgressDialog("正在初始化数据...");
 		// 初始化界面数据
@@ -160,45 +167,84 @@ public class MainActivity extends BaseActivity {
 
 	}
 
-	@Override
-	protected void onStart() {
-		showProgressDialog("正在初始化数据...");
-		// 初始化界面数据
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				if (dataList.size() == 0) {
-					System.out.println("重新装载了...");
-					// 初始化数据
-					String filePath = "/data"
-							+ Environment.getDataDirectory().getAbsolutePath()
-							+ "/" + "com.kevin.addressBook/"
-							+ "AddressBook.xml";
-					SharedPreferences preferences = getSharedPreferences(
-							"config", Context.MODE_PRIVATE);
-					filePath = preferences.getString("filePath", filePath);
+//	@Override
+//	protected void onStart() {
+//		System.out.println("运行了");
+//		showProgressDialog("正在初始化数据...");
+//		// 初始化界面数据
+//		new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				if (dataList.size() == 0) {
+//					System.out.println("重新装载了...");
+//					// 初始化数据
+//					String filePath = "/data"
+//							+ Environment.getDataDirectory().getAbsolutePath()
+//							+ "/" + "com.kevin.addressBook/"
+//							+ "AddressBook.xml";
+//					SharedPreferences preferences = getSharedPreferences(
+//							"config", Context.MODE_PRIVATE);
+//					filePath = preferences.getString("filePath", filePath);
+//
+//					File file = new File(filePath);
+//					if (!file.exists()) {
+//						DBFileImporter.importDB(context, filePath,
+//								"AddressBook.xml");
+//					}
+//					XmlOptionsImp.setPath(filePath);
+//					dataList = XmlOptionsImp.getInstance().getAllUsers();
+//				}
+//				hideProgressDialog();
+//				Message msg = new Message();
+//				msg.what = 0;
+//				handler.sendMessage(msg);
+//			}
+//		}).start();
+//		super.onStart();
+//	}
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		//当resultCode==3时代表添加了一个用户返回，当resultCode==4的时候代表修改了用户，或者删除了用户，其他条件代表数据没有变化
+		if(resultCode == 3) {
+			System.out.println("888888888888888888运行了");
+			showProgressDialog("正在初始化数据...");
+			// 初始化界面数据
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					if (dataList.size() == 0) {
+						System.out.println("重新装载了...");
+						// 初始化数据
+						String filePath = "/data"
+								+ Environment.getDataDirectory().getAbsolutePath()
+								+ "/" + "com.kevin.addressBook/"
+								+ "AddressBook.xml";
+						SharedPreferences preferences = getSharedPreferences(
+								"config", Context.MODE_PRIVATE);
+						filePath = preferences.getString("filePath", filePath);
 
-					File file = new File(filePath);
-					if (!file.exists()) {
-						DBFileImporter.importDB(context, filePath,
-								"AddressBook.xml");
+						File file = new File(filePath);
+						if (!file.exists()) {
+							DBFileImporter.importDB(context, filePath,
+									"AddressBook.xml");
+						}
+						XmlOptionsImp.setPath(filePath);
+						dataList = XmlOptionsImp.getInstance().getAllUsers();
 					}
-					XmlOptionsImp.setPath(filePath);
-					dataList = XmlOptionsImp.getInstance().getAllUsers();
+					hideProgressDialog();
+					Message msg = new Message();
+					msg.what = 0;
+					handler.sendMessage(msg);
 				}
-				hideProgressDialog();
-				Message msg = new Message();
-				msg.what = 0;
-				handler.sendMessage(msg);
-			}
-		}).start();
-		super.onStart();
+			}).start();
+		}
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// getMenuInflater().inflate(R.menu.main, menu);
 		menu.add(1, 1, 1, "选择文件");
+		menu.add(1, 2, 2, "添加记录");
 		return true;
 	}
 
@@ -243,6 +289,41 @@ public class MainActivity extends BaseActivity {
 							});
 			alertDialog = builder.create();
 			alertDialog.show();
+		case 2:
+
+			// 弹出对话框输入密码后验证通过才能改
+			final Dialog dialog = new Dialog(MainActivity.this,
+					R.style.Theme_ShareDialog);
+			dialog.setContentView(R.layout.main_edit_dialog);
+			dialog.show();
+			// 得到资源ID保存信息 或相应的操作
+			final EditText write = (EditText) dialog
+					.findViewById(R.id.main_edit_dialog_mima);
+			ImageButton save = (ImageButton) dialog
+					.findViewById(R.id.main_edit_dialog_save);
+			ImageButton cancel1 = (ImageButton) dialog
+					.findViewById(R.id.main_edit_dialog_cancel);
+			// 确定按钮保存输入资源到数据库 并且跳转到浏览页面
+			save.setOnTouchListener(new CustomTouchListener() {
+				@Override
+				public void eventAction(View arg0) {
+					if (write.getText().toString().equals("111111")) {
+						Intent intent = new Intent(context, MainAddActivity.class);
+//						context.startActivity(intent);
+						startActivityForResult(intent, 3);
+						dialog.cancel();
+					}
+				}
+			});
+
+			// 取消按钮不保存此信息 关闭对话框 跳转页面到拍照按钮页面
+			cancel1.setOnTouchListener(new CustomTouchListener() {
+				@Override
+				public void eventAction(View arg0) {
+
+					dialog.cancel();
+				}
+			});
 		}
 		return super.onOptionsItemSelected(item);
 

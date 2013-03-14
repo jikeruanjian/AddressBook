@@ -17,11 +17,15 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -49,7 +53,7 @@ public class MainEditActivity extends BaseActivity {
 	private Button cancel;
 	private int isclicked = 0;
 	private String filePaht;
-
+    private  ImageView photo ;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,8 +67,7 @@ public class MainEditActivity extends BaseActivity {
 		address = (EditText) this.findViewById(R.id.main_edit_adds);
 		sell = (EditText) this.findViewById(R.id.main_edit_sell);
 		ask = (EditText) this.findViewById(R.id.main_edit_ask);
-		final ImageView photo = (ImageView) this
-				.findViewById(R.id.main_edit_photo);
+		photo= (ImageView) this.findViewById(R.id.main_edit_photo);
 		qqNun = (EditText) this.findViewById(R.id.main_edit_qqNum);
 		mailBox = (EditText) this.findViewById(R.id.main_edit_mailbox);
 		url = (EditText) this.findViewById(R.id.main_edit_url);
@@ -74,31 +77,31 @@ public class MainEditActivity extends BaseActivity {
 		toolID = intent.getStringExtra("toolID");
 		AddressInfo addressInfo = new AddressInfo();
 		addressInfo = XmlOptionsImp.getInstance().getUserDetails(toolID);
-
-		name.setText(addressInfo.getName());
-		name.setInputType(InputType.TYPE_NULL);
-		tel.setText(addressInfo.getPhoneNum());
-		tel.setInputType(InputType.TYPE_NULL);
-		job.setText(addressInfo.getPost());
-		job.setInputType(InputType.TYPE_NULL);
-		unit.setText(addressInfo.getCompany());
-		unit.setInputType(InputType.TYPE_NULL);
-		address.setText(addressInfo.getAddress());
-		address.setInputType(InputType.TYPE_NULL);
-		sell.setText(addressInfo.getSaleInfo());
-		sell.setInputType(InputType.TYPE_NULL);
-		ask.setText(addressInfo.getPurchaseInfo());
-		ask.setInputType(InputType.TYPE_NULL);
-		qqNun.setText(addressInfo.getQq());
-		qqNun.setInputType(InputType.TYPE_NULL);
-		mailBox.setText(addressInfo.getEmail());
-		mailBox.setInputType(InputType.TYPE_NULL);
-		url.setText(addressInfo.getWebSite());
-		url.setInputType(InputType.TYPE_NULL);
-		filePaht = addressInfo.getImageName();
-		Bitmap bitmap = BitmapFactory.decodeFile(filePaht);
-		photo.setImageBitmap(bitmap);
-
+//        if(addressInfo==null){
+    		name.setText(addressInfo.getName());
+    		name.setInputType(InputType.TYPE_NULL);
+    		tel.setText(addressInfo.getPhoneNum());
+    		tel.setInputType(InputType.TYPE_NULL);
+    		job.setText(addressInfo.getPost());
+    		job.setInputType(InputType.TYPE_NULL);
+    		unit.setText(addressInfo.getCompany());
+    		unit.setInputType(InputType.TYPE_NULL);
+    		address.setText(addressInfo.getAddress());
+    		address.setInputType(InputType.TYPE_NULL);
+    		sell.setText(addressInfo.getSaleInfo());
+    		sell.setInputType(InputType.TYPE_NULL);
+    		ask.setText(addressInfo.getPurchaseInfo());
+    		ask.setInputType(InputType.TYPE_NULL);
+    		qqNun.setText(addressInfo.getQq());
+    		qqNun.setInputType(InputType.TYPE_NULL);
+    		mailBox.setText(addressInfo.getEmail());
+    		mailBox.setInputType(InputType.TYPE_NULL);
+    		url.setText(addressInfo.getWebSite());
+    		url.setInputType(InputType.TYPE_NULL);
+    		filePaht = addressInfo.getImageName();
+    		Bitmap bitmap = BitmapFactory.decodeFile(filePaht);
+    		photo.setImageBitmap(bitmap);	
+//        }
 		cancel = (Button) this.findViewById(R.id.main_edit_cancel);
 		cancel.setText("返回");
 		cancel.setOnClickListener(new OnClickListener() {
@@ -265,35 +268,33 @@ public class MainEditActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				showProgressDialog("请稍等...");
-				final SelectImages fileBrowserView = new SelectImages(
-						MainEditActivity.this);
-				builder = new AlertDialog.Builder(MainEditActivity.this)
-						.setIcon(R.drawable.ic_launcher)
-						.setTitle("选择相片（jpg、png、gif）")
-						.setView(fileBrowserView)
-						.setPositiveButton("确定",
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										String filePaht = fileBrowserView.getSelectedFiles();
-										Bitmap bitmap = BitmapFactory.decodeFile(filePaht);
-										photo.setImageBitmap(bitmap);
-										dialog.cancel();
-									}
-								})
-						.setNegativeButton("取消",
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										dialog.cancel();
-									}
-								});
-				alertDialog = builder.create();
-				alertDialog.show();
-				hideProgressDialog();
+				Intent intent = new Intent();
+				intent.setAction(Intent.ACTION_GET_CONTENT);
+				intent.setType("image/*");
+				startActivityForResult(
+						Intent.createChooser(intent, "SelectPicture"), 1);
+
+			    /*	
+				 * showProgressDialog("请稍等..."); final SelectImages
+				 * fileBrowserView = new SelectImages( MainEditActivity.this);
+				 * builder = new AlertDialog.Builder(MainEditActivity.this)
+				 * .setIcon(R.drawable.ic_launcher)
+				 * .setTitle("选择相片（jpg、png、gif）") .setView(fileBrowserView)
+				 * .setPositiveButton("确定", new
+				 * DialogInterface.OnClickListener() {
+				 * 
+				 * @Override public void onClick(DialogInterface dialog, int
+				 * which) { String filePaht =
+				 * fileBrowserView.getSelectedFiles(); Bitmap bitmap =
+				 * BitmapFactory.decodeFile(filePaht);
+				 * photo.setImageBitmap(bitmap); dialog.cancel(); } })
+				 * .setNegativeButton("取消", new
+				 * DialogInterface.OnClickListener() {
+				 * 
+				 * @Override public void onClick(DialogInterface dialog, int
+				 * which) { dialog.cancel(); } }); alertDialog =
+				 * builder.create(); alertDialog.show(); hideProgressDialog();
+				 */
 			}
 		});
 	}
@@ -312,4 +313,28 @@ public class MainEditActivity extends BaseActivity {
 		fou.close();
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == 1) {
+			Bitmap myBitmap = (Bitmap) map(data);
+			photo.setImageBitmap(myBitmap);
+		}
+	}
+
+	public Bitmap map(Intent data) {
+		Uri selectedImage = data.getData();
+		String[] filePathColumn = { MediaStore.Images.Media.DATA };
+		Cursor cursor = context.getContentResolver().query(selectedImage,
+				filePathColumn, null, null, null);
+		cursor.moveToFirst();
+		int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+		String picturePath = cursor.getString(columnIndex);
+		System.out.println("****************picturePath=" + picturePath);
+		filePaht = picturePath;
+		cursor.close();
+		Log.d("picturePath", picturePath);
+		return BitmapFactory.decodeFile(picturePath);
+	}
 }

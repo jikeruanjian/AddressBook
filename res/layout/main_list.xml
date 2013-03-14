@@ -34,7 +34,7 @@
         style="@style/ios_listview_style"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dip"
+        android:layout_marginBottom="20dip"
         android:layout_marginTop="10dip"
         android:layout_weight="1"
         android:choiceMode="singleChoice"
@@ -43,7 +43,7 @@
         android:focusable="true" >
     </ListView>
 
-    <Button
+    <!-- <Button
         android:id="@+id/main_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -52,6 +52,6 @@
         android:layout_weight="0"
         android:gravity="center"
         android:text="增加"
-        android:textColor="#ffffff" />
+        android:textColor="#ffffff" /> -->
 
 </LinearLayout>

@@ -76,7 +76,7 @@ containing a value of this type.
         public static final int unknow_type=0x7f020015;
     }
     public static final class id {
-        public static final int action_settings=0x7f090023;
+        public static final int action_settings=0x7f090022;
         public static final int body=0x7f090000;
         public static final int cb=0x7f090003;
         public static final int checkbox=0x7f09000a;
@@ -87,7 +87,6 @@ containing a value of this type.
         public static final int imagename=0x7f090008;
         public static final int linearLayout1=0x7f090006;
         public static final int linearLayout5=0x7f09001a;
-        public static final int main_add=0x7f09001f;
         public static final int main_edit_adds=0x7f090014;
         public static final int main_edit_ask=0x7f090016;
         public static final int main_edit_cancel=0x7f090018;
@@ -105,9 +104,9 @@ containing a value of this type.
         public static final int main_edit_unit=0x7f090013;
         public static final int main_edit_url=0x7f090011;
         public static final int main_list=0x7f09001e;
-        public static final int main_list_item_name=0x7f090021;
-        public static final int main_list_item_photo=0x7f090020;
-        public static final int main_list_item_tel=0x7f090022;
+        public static final int main_list_item_name=0x7f090020;
+        public static final int main_list_item_photo=0x7f09001f;
+        public static final int main_list_item_tel=0x7f090021;
         public static final int main_list_seacher=0x7f09001d;
         public static final int message=0x7f090002;
         public static final int progress=0x7f090001;
