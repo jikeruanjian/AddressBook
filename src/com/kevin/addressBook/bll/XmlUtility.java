@@ -20,7 +20,7 @@ import com.kevin.addressBook.model.Const;
 public class XmlUtility {
 
 	/**
-	 * ���xml�ļ����ļ����xml�ļ�ת����Document���󲢷���
+	 * 将文本内容已doc的形式读取出来
 	 */
 	public static Document getDocument(String fileUrl) {
 		if (fileUrl == null || fileUrl.equals(""))
@@ -32,14 +32,13 @@ public class XmlUtility {
 			document = reader.read(file);
 		} catch (DocumentException e) {
 			document = DocumentHelper.createDocument();
-			document.addElement("list");// ��ڵ�
+			document.addElement("list");// 添加根节点
 		}
 		return document;
 	}
 
 	/**
-	 * ��һ��xml�ļ��У�����xml�ļ������Element��elementName��ȡ�����и���������
-	 * ElementԪ�أ� ������ת��Ϊjavabean���ͣ�������List�з���
+	 * 将doc转换为List
 	 */
 	public static List<AddressInfo> parseDocToObject(Document doc) {
 		List<AddressInfo> result = new ArrayList<AddressInfo>();
@@ -55,7 +54,7 @@ public class XmlUtility {
 				if (attribute.getName().equals(Const.AddressInfo.ID)) {
 					String id = attribute.getValue();
 					if (id == null || id.equals("")) {
-						id = UUID.randomUUID().toString(); // ���û��ID��ֵ������Ҫ���һ��
+						id = UUID.randomUUID().toString(); // 重新设置一个ID
 						attribute.setText(id);
 					}
 					ai.setId(id);
@@ -82,6 +81,12 @@ public class XmlUtility {
 					ai.setPurchaseInfo(att.getTextTrim());
 				} else if (att.getName().equals(Const.AddressInfo.IMAGENAME)) {
 					ai.setImageName(att.getTextTrim());
+				} else if (att.getName().equals(Const.AddressInfo.QQ)) {
+					ai.setQq(att.getTextTrim());
+				} else if (att.getName().equals(Const.AddressInfo.EMAIL)) {
+					ai.setEmail(att.getTextTrim());
+				} else if (att.getName().equals(Const.AddressInfo.WEBSITE)) {
+					ai.setWebSite(att.getTextTrim());
 				}
 			}
 			result.add(ai);
@@ -90,8 +95,7 @@ public class XmlUtility {
 	}
 
 	/**
-	 * ���ElementԪ�ص�javabean�����Լ�ElementԪ�ص�elementName��Element
-	 * root������һ��Element ��
+	 * 在根节点上增加一个元素
 	 */
 	public static boolean addElement(Element root, AddressInfo addressInfo) {
 		try {
@@ -114,6 +118,12 @@ public class XmlUtility {
 					addressInfo.getPurchaseInfo());
 			element.addElement(Const.AddressInfo.IMAGENAME).setText(
 					addressInfo.getImageName());
+			element.addElement(Const.AddressInfo.QQ).setText(
+					addressInfo.getQq());
+			element.addElement(Const.AddressInfo.EMAIL).setText(
+					addressInfo.getEmail());
+			element.addElement(Const.AddressInfo.WEBSITE).setText(
+					addressInfo.getWebSite());
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -122,8 +132,7 @@ public class XmlUtility {
 	}
 
 	/**
-	 * ���ElementԪ�ص�javabean�����Լ�ElementԪ�ص�elementName��Element
-	 * root������һ��Element ��
+	 * 编辑根节点上的一个元素
 	 */
 	public static boolean editElement(Element root, AddressInfo addressInfo) {
 		List<Element> elements = root.elements();
@@ -159,6 +168,15 @@ public class XmlUtility {
 							} else if (att.getName().equals(
 									Const.AddressInfo.IMAGENAME)) {
 								att.setText(addressInfo.getImageName());
+							} else if (att.getName().equals(
+									Const.AddressInfo.QQ)) {
+								att.setText(addressInfo.getQq());
+							} else if (att.getName().equals(
+									Const.AddressInfo.EMAIL)) {
+								att.setText(addressInfo.getEmail());
+							} else if (att.getName().equals(
+									Const.AddressInfo.WEBSITE)) {
+								att.setText(addressInfo.getWebSite());
 							}
 						}
 					}
@@ -170,8 +188,7 @@ public class XmlUtility {
 	}
 
 	/**
-	 * ��Document�����У���elementName��attributeName��attributeValueΪ����ɾ���Ӧ��
-	 * ElementԪ�ء�
+	 * 通过ID从根节点上移除一个元素
 	 */
 	public static boolean removeElementByAttribute(Document document, String id) {
 		List<Element> list = document.getRootElement().elements(
@@ -190,7 +207,7 @@ public class XmlUtility {
 	}
 
 	/**
-	 * ��Document������filePath��Ӧ�������ļ�����ͬ����
+	 * 将doc写如文件
 	 */
 	public static void writeDocumentToFile(Document document, String filePath)
 			throws IOException {

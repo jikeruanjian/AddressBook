@@ -13,5 +13,8 @@ public class Const {
 		public static final String SALEINFO = "saleInfo";
 		public static final String PURCHASEINFO = "purchaseInfo";
 		public static final String IMAGENAME = "imageName";
+		public static final String QQ = "qq";
+		public static final String EMAIL = "email";
+		public static final String WEBSITE = "webSite";
 	}
 }
