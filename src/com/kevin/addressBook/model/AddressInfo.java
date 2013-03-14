@@ -1,22 +1,25 @@
 package com.kevin.addressBook.model;
 
 /**
- * �û���Ϣ
+ * 
  * 
  * @author kevin
  * 
  */
 public class AddressInfo {
 
-	private String id = ""; // Ψһ�ı��
-	private String name = ""; // ����
-	private String post = ""; // ְ��
-	private String company = ""; // ��λ
-	private String address = ""; // ��ַ
-	private String phoneNum = ""; // �绰
-	private String saleInfo = ""; // ������Ϣ
-	private String purchaseInfo = ""; // ����Ϣ
-	private String imageName = ""; // ͷ��
+	private String id = ""; // 编号
+	private String name = ""; // 姓名
+	private String post = ""; // 职位
+	private String company = ""; // 单位
+	private String address = ""; // 地址
+	private String phoneNum = ""; // 电话
+	private String saleInfo = ""; // 销售信息
+	private String purchaseInfo = ""; // 求购信息
+	private String imageName = ""; // 头像
+	private String qq = ""; // QQ号
+	private String email = "";
+	private String webSite = "";
 
 	public String getId() {
 		return id;
@@ -88,5 +91,29 @@ public class AddressInfo {
 
 	public void setImageName(String imageName) {
 		this.imageName = imageName;
+	}
+
+	public String getQq() {
+		return qq;
+	}
+
+	public void setQq(String qq) {
+		this.qq = qq;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getWebSite() {
+		return webSite;
+	}
+
+	public void setWebSite(String webSite) {
+		this.webSite = webSite;
 	}
 }
