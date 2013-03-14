@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -59,8 +60,8 @@ public class DBFileImporter {
 	 */
 	public static List<AddressInfo> searchWithKey(String key,
 			List<AddressInfo> allInfos) {
-		List<AddressInfo> result = null;
-		for (AddressInfo addressInfo : result) {
+		List<AddressInfo> result = new ArrayList<AddressInfo>();
+		for (AddressInfo addressInfo : allInfos) {
 			if (addressInfo.getName().contains(key)) {
 				result.add(addressInfo);
 			}

@@ -5,6 +5,7 @@ import com.kevin.addressBook.R;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -58,7 +59,7 @@ public class BaseActivity extends Activity {
 	}
 
 	/**
-	 * è®¾ç½®åœ†è§’é£æ ¼listviewçš„é?ä¸­æ¡
+	 * è®¾ç½®åœ†è§’é£æ ¼listviewçš„ï¿½?ä¸­æ¡
 	 * 
 	 * @param position
 	 * @param count
@@ -82,8 +83,8 @@ public class BaseActivity extends Activity {
 
 		if (progressDialog == null) {
 			try {
-				progressDialog = ProgressDialog.show(context, "ÇëÉÔµÈ...",
-						"ÕıÔÚµÇÂ¼...", true);
+				progressDialog = ProgressDialog.show(context, "ï¿½ï¿½ï¿½Ôµï¿½...",
+						"ï¿½ï¿½ï¿½Úµï¿½Â¼...", true);
 				progressDialog.setContentView(R.layout.custom_progress);
 				// progressDialog.setCancelable(true);
 				progressDialog.setOnKeyListener(new OnKeyListener() {
@@ -94,10 +95,10 @@ public class BaseActivity extends Activity {
 								&& arg2.getRepeatCount() == 0
 								&& arg2.getAction() == KeyEvent.ACTION_UP) {
 							new AlertDialog.Builder(BaseActivity.this)
-									.setTitle("¾¯¸æ")
-									.setMessage("´¦ÀíÉĞÎ´Íê³É£¬ÏÖÔÚÍ£Ö¹¿ÉÄÜÓ°Ïìµ½³ÌĞòµÄÕı³£Ê¹ÓÃ£¬ÊÇ·ñÍ£Ö¹£¿")
+									.setTitle("ï¿½ï¿½ï¿½ï¿½")
+									.setMessage("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½É£ï¿½ï¿½ï¿½ï¿½ï¿½Í£Ö¹ï¿½ï¿½ï¿½ï¿½Ó°ï¿½ìµ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã£ï¿½ï¿½Ç·ï¿½Í£Ö¹ï¿½ï¿½")
 									.setPositiveButton(
-											"È·¶¨",
+											"È·ï¿½ï¿½",
 											new DialogInterface.OnClickListener() {
 												@Override
 												public void onClick(
@@ -107,7 +108,7 @@ public class BaseActivity extends Activity {
 												}
 											})
 									.setNegativeButton(
-											"È¡Ïû",
+											"È¡ï¿½ï¿½",
 											new DialogInterface.OnClickListener() {
 												@Override
 												public void onClick(
@@ -123,7 +124,7 @@ public class BaseActivity extends Activity {
 				});
 				View v = progressDialog.getWindow().getDecorView();
 				if (text == null) {
-					text = "ÇëÉÔµÈ...";
+					text = "ï¿½ï¿½ï¿½Ôµï¿½...";
 				}
 				setProgressText(v, text);
 			} catch (Exception e) {
@@ -136,7 +137,7 @@ public class BaseActivity extends Activity {
 	public void setProgressText(String text) {
 		View v = progressDialog.getWindow().getDecorView();
 		if (text == null) {
-			text = "ÇëÉÔµÈ...";
+			text = "ï¿½ï¿½ï¿½Ôµï¿½...";
 		}
 		setProgressText(v, text);
 	}
@@ -166,13 +167,13 @@ public class BaseActivity extends Activity {
 			try {
 				progressDialog.dismiss();
 			} catch (Exception e) {
-				e.printStackTrace(); // µ±¸¸½çÃæÒÑ¾­ÏûÊ§£¬ÔÚÀ´dismiss¾Í»á³ö´í£¬ÕâÀïÖ±½ÓÍÌµô¾ÍĞĞÁË
+				e.printStackTrace(); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½Ê§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½dismissï¿½Í»ï¿½ï¿½ï¿½?ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ï¿½ï¿½Ìµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			}
 			progressDialog = null;
 		}
 	}
 
-	// ¿ØÖÆÔÚºáÊúÆÁÇĞ»»µÄÊ±ºò³ö´í
+	// ï¿½ï¿½ï¿½ï¿½ï¿½Úºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ»ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½
 	@Override
 	protected void onPause() {
 		super.onPause();

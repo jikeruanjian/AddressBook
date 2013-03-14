@@ -1,4 +1,4 @@
-#Thu Mar 14 11:41:08 CST 2013
+#Thu Mar 14 16:31:39 CST 2013
 eclipse.preferences.version=1
 encoding//src/com/example/tools/PictureManagerActivity.java=UTF-8
 encoding//src/com/example/tools/SDPictureService.java=UTF-8
@@ -6,6 +6,7 @@ encoding//src/com/kevin/addressBook/bll/DBFileImporter.java=UTF-8
 encoding//src/com/kevin/addressBook/bll/IXmlOptions.java=UTF-8
 encoding//src/com/kevin/addressBook/bll/XmlUtility.java=UTF-8
 encoding//src/com/kevin/addressBook/model/AddressInfo.java=UTF-8
-encoding//src/com/kevin/addressBook/tools/MyFileBrowser.java=UTF-8
+encoding//src/com/kevin/addressBook/tools/SelectFiles.java=UTF-8
+encoding//src/com/kevin/addressBook/tools/SelectImages.java=UTF-8
 encoding//src/com/kevin/addressBook/ui/BaseActivity.java=UTF-8
 encoding/<project>=UTF-8

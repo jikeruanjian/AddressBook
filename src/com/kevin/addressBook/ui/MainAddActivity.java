@@ -9,14 +9,12 @@ import java.util.List;
 
 import com.kevin.addressBook.bll.XmlOptionsImp;
 import com.kevin.addressBook.model.AddressInfo;
-import com.kevin.addressBook.tools.MyFileBrowser;
-import com.kevin.addressBook.tools.SDPictureService;
+import com.kevin.addressBook.tools.SelectImages;
 import com.kevin.addressBook.R;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -33,7 +31,6 @@ public class MainAddActivity extends BaseActivity {
 	private List<String> path;
 	private AlertDialog.Builder builder = null;
 	private AlertDialog alertDialog = null;
-	private View textview;
 	private EditText name;
 	private EditText tel;
 	private EditText job;
@@ -45,15 +42,13 @@ public class MainAddActivity extends BaseActivity {
 	private EditText mailBox;
 	private EditText url;
 	private ImageView photo;
-	private String filePaht;
+	private String filePaht="";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main_edit);
-
-		path = SDPictureService.imagePaths;
 
 		name = (EditText) this.findViewById(R.id.main_edit_name);
 		tel = (EditText) this.findViewById(R.id.main_edit_tel);
@@ -124,8 +119,6 @@ public class MainAddActivity extends BaseActivity {
 								.show();
 					}
 				} catch (IOException e) {
-					// Toast.makeText(context, "添加失败！",
-					// Toast.LENGTH_SHORT).show();
 					e.printStackTrace();
 				}
 
@@ -143,17 +136,23 @@ public class MainAddActivity extends BaseActivity {
 				address.setText("");
 				sell.setText("");
 				ask.setText("");
+				qqNun.setText("");
+				mailBox.setText("");
+				url.setText("");
 				photo.setBackgroundResource(R.drawable.ic_launcher);
 			}
 		});
 
-		Button changePhoto = (Button) this
-				.findViewById(R.id.main_edit_change_photo);
-		changePhoto.setOnClickListener(new OnClickListener() {
+		photo.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
-				final MyFileBrowser fileBrowserView = new MyFileBrowser(
+//				Intent intent=new Intent();
+//				intent.setAction(Intent.ACTION_GET_CONTENT);
+//				intent.setType("image/*");
+//				startActivityForResult(Intent.createChooser(intent, "Select Picture"),1);
+				
+				showProgressDialog("请稍等...");
+				final SelectImages fileBrowserView = new SelectImages(
 						MainAddActivity.this);
 				builder = new AlertDialog.Builder(MainAddActivity.this)
 						.setIcon(R.drawable.ic_launcher)
@@ -164,31 +163,9 @@ public class MainAddActivity extends BaseActivity {
 									@Override
 									public void onClick(DialogInterface dialog,
 											int which) {
-										List<File> selectedFiles = null;
-										selectedFiles = fileBrowserView
-												.getSelectedFiles();
-										StringBuilder text = new StringBuilder(
-												"|");
-										if (selectedFiles == null)
-											return;
-										for (File file : selectedFiles) {
-											text.append(file.getName() + "|");
-										}
-										for (File file : selectedFiles) {
-											String fileName = file.getName();
-											String[] fs = fileName.split("\\.");
-											if (fs.length == 2) {
-												String hz = fs[1];
-												if (hz.equals("jpg")
-														|| hz.equals("png")
-														|| hz.equals("gif")) {
-													filePaht = file.getPath();
-													Bitmap bitmap = BitmapFactory
-															.decodeFile(filePaht);
-													photo.setImageBitmap(bitmap);
-												}
-											}
-										}
+										String filePaht = fileBrowserView.getSelectedFiles();
+										Bitmap bitmap = BitmapFactory.decodeFile(filePaht);
+										photo.setImageBitmap(bitmap);
 										dialog.cancel();
 									}
 								})
@@ -203,10 +180,25 @@ public class MainAddActivity extends BaseActivity {
 								});
 				alertDialog = builder.create();
 				alertDialog.show();
+				hideProgressDialog();
 			}
 		});
 
 	}
+
+//	@Override
+//	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//		// TODO Auto-generated method stub
+//		super.onActivityResult(requestCode, resultCode, data);
+//		  if (requestCode == 1){  
+//				Bundle extras = data.getExtras();  
+//				if(extras == null){//点击取消按钮
+//					finish();
+//				}
+//				Bitmap myBitmap = (Bitmap) extras.get("data");  
+//				photo.setImageBitmap(myBitmap);
+//		  }
+//	}
 
 	/** 自定义拷贝文件 */
 	private void copyfile(FileInputStream fin, FileOutputStream fou)

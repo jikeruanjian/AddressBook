@@ -7,7 +7,7 @@ import java.util.List;
 import com.kevin.addressBook.bll.DBFileImporter;
 import com.kevin.addressBook.bll.XmlOptionsImp;
 import com.kevin.addressBook.model.AddressInfo;
-import com.kevin.addressBook.tools.MyFileBrowser;
+import com.kevin.addressBook.tools.SelectFiles;
 import com.kevin.addressBook.ui.MainActivity.MainActivityListAdapter.ViewHolder;
 import com.kevin.addressBook.R;
 
@@ -45,6 +45,7 @@ public class MainActivity extends BaseActivity {
 	private ViewHolder holder;
 	private AlertDialog.Builder builder = null;
 	private AlertDialog alertDialog = null;
+	private String key = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +62,8 @@ public class MainActivity extends BaseActivity {
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
 				case 0: { // 重新加载数据
-					list.setAdapter(new MainActivityListAdapter(context,
-							dataList));
+				 list.setAdapter(new
+				 MainActivityListAdapter(context,DBFileImporter.searchWithKey(key, dataList)));
 					hideProgressDialog();
 					break;
 				}
@@ -74,30 +75,23 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				// TODO Auto-generated method stub
-
 			}
 
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
-				// TODO Auto-generated method stub
-
 			}
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				// TODO Auto-generated method stub
-				final String index = s.toString();
+				key = s.toString();
 				showProgressDialog("正在初始化数据...");
 				// 初始化界面数据
 				new Thread(new Runnable() {
 
 					@Override
 					public void run() {
-//						 dataList = XmlOptionsImp.getInstance().;
-						// dataList = new ToolPDBll()
-						// .getAllCanStockCountSafeTools(index);
+						dataList = XmlOptionsImp.getInstance().getAllUsers();
 						Message msg = new Message();
 						msg.what = 0;
 						handler.sendMessage(msg);
@@ -125,7 +119,6 @@ public class MainActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				Intent intent = new Intent(context, MainAddActivity.class);
 				context.startActivity(intent);
 			}
@@ -169,7 +162,6 @@ public class MainActivity extends BaseActivity {
 
 	@Override
 	protected void onStart() {
-		// TODO Auto-generated method stub
 		showProgressDialog("正在初始化数据...");
 		// 初始化界面数据
 		new Thread(new Runnable() {
@@ -212,11 +204,10 @@ public class MainActivity extends BaseActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
 		switch (item.getItemId()) {
 		// 响应每个菜单项(通过菜单项的ID)
 		case 1:
-			final MyFileBrowser fileBrowserView = new MyFileBrowser(
+			final SelectFiles fileBrowserView = new SelectFiles(
 					MainActivity.this);
 			builder = new AlertDialog.Builder(MainActivity.this)
 					.setIcon(R.drawable.ic_launcher)
@@ -227,41 +218,17 @@ public class MainActivity extends BaseActivity {
 								@Override
 								public void onClick(DialogInterface dialog,
 										int which) {
-									// ����¼�.
-									List<File> selectedFiles = null;
-									selectedFiles = fileBrowserView
+									
+									String filePath = (String) fileBrowserView
 											.getSelectedFiles();
-
-									// ������ʾ��ǰ���� label
-									StringBuilder text = new StringBuilder("|");
-									if (selectedFiles == null)
-										return;
-									for (File file : selectedFiles) {
-										text.append(file.getName() + "|");
-									}
-									for (File file : selectedFiles) {
-										String fileName = file.getName();
-										String[] fs = fileName.split("\\.");
-										if (fs.length == 2) {
-											String hz = fs[1];
-											if (hz.equals("txt")
-													|| hz.equals("xml")) {
-												String filePath = file
-														.getPath();
-												System.out.println("得到的文件路径为："
-														+ filePath);
-												// 保存路径
-												SharedPreferences preferences = getSharedPreferences(
-														"config",
-														Context.MODE_PRIVATE);
-												Editor editor = preferences
-														.edit();
-												editor.putString("filePath",
-														filePath);
-												XmlOptionsImp.setPath(filePath);
-											}
-										}
-									}
+									System.out.println("得到的文件路径为：" + filePath);
+									// 保存路径
+									SharedPreferences preferences = getSharedPreferences(
+											"config", Context.MODE_PRIVATE);
+									Editor editor = preferences.edit();
+									editor.putString("filePath", filePath);
+									XmlOptionsImp.setPath(filePath);
+									
 									dialog.cancel();
 								}
 							})
@@ -311,15 +278,29 @@ public class MainActivity extends BaseActivity {
 				holder = (ViewHolder) convertView.getTag();// 取出ViewHolder对象
 			}
 			AddressInfo entity = (AddressInfo) dataList.get(position);
-			holder.name.setText("姓名："+entity.getName());
-			holder.tel.setText("电话："+entity.getPhoneNum());
+			holder.name.setText("姓名：" + entity.getName());
+			holder.tel.setText("电话：" + entity.getPhoneNum());
 			String path = entity.getImageName();
-			if (path != null) {
-				Bitmap bitmap = BitmapFactory.decodeFile(entity.getImageName());
+			if (!path.equals("")) {
+				
+				BitmapFactory.Options options = new BitmapFactory.Options();
+				options.inJustDecodeBounds = true;
+				// 获取这个图片的宽和高
+				Bitmap bitmap = BitmapFactory.decodeFile(entity.getImageName(), options); //此时返回bm为空
+				options.inJustDecodeBounds = false;
+				//计算缩放比
+				int be = (int)(options.outHeight / (float)200);
+				if (be <= 0)
+					be = 1;
+				options.inSampleSize = be;
+				//重新读入图片，注意这次要把options.inJustDecodeBounds 设为 false哦
+				bitmap=BitmapFactory.decodeFile(entity.getImageName(),options);
+				
+//				Bitmap bitmap = BitmapFactory.decodeFile(entity.getImageName());
 				holder.photo.setImageBitmap(bitmap);
 			} else {
 				holder.photo.setImageResource(R.drawable.ic_launcher);
-				// holder.photo.getResources().getDrawable(R.drawable.ic_launcher);
+//				holder.photo.setImageResource(R.drawable.dir);
 			}
 
 			((MainActivity) context).setIOSListItemBg(position, getCount(),
