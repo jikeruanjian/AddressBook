@@ -50,7 +50,7 @@ public class MainAddActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);// ��������
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main_edit);
 
 		path = SDPictureService.imagePaths;
@@ -63,9 +63,9 @@ public class MainAddActivity extends BaseActivity {
 		sell = (EditText) this.findViewById(R.id.main_edit_sell);
 		ask = (EditText) this.findViewById(R.id.main_edit_ask);
 		photo = (ImageView) this.findViewById(R.id.main_edit_photo);
-		qqNun=(EditText) this.findViewById(R.id.main_edit_qqNum);
-		mailBox=(EditText) this.findViewById(R.id.main_edit_mailbox);
-		url=(EditText) this.findViewById(R.id.main_edit_url);
+		qqNun = (EditText) this.findViewById(R.id.main_edit_qqNum);
+		mailBox = (EditText) this.findViewById(R.id.main_edit_mailbox);
+		url = (EditText) this.findViewById(R.id.main_edit_url);
 
 		Button save = (Button) this.findViewById(R.id.main_edit_save);
 		save.setText("保存");
@@ -81,6 +81,9 @@ public class MainAddActivity extends BaseActivity {
 				ai.setAddress(address.getText().toString());
 				ai.setSaleInfo(sell.getText().toString());
 				ai.setPurchaseInfo(ask.getText().toString());
+				ai.setQq(qqNun.getText().toString());
+				ai.setEmail(mailBox.getText().toString());
+				ai.setWebSite(url.getText().toString());
 				ai.setImageName(filePaht);
 				// 得到图片路径并存入xml文件中
 				try {
@@ -89,18 +92,17 @@ public class MainAddActivity extends BaseActivity {
 						if (Environment.getExternalStorageState().equals(
 								Environment.MEDIA_MOUNTED)) {
 							// 在sd卡中创建picasa文件夹
-							String dir=XmlOptionsImp.getPath()
-							.substring(
-									0,
-									XmlOptionsImp.getPath()
-											.lastIndexOf("/"))+"/AddressBookPic";
+							String dir = XmlOptionsImp.getPath().substring(0,
+									XmlOptionsImp.getPath().lastIndexOf("/"))
+									+ "/AddressBookPic";
 							File files = new File(dir);
 							if (!files.isDirectory()) {
 								files.mkdirs();
 							}
 							String str[] = filePaht.split("/");
 							try {
-								File saveFile = new File(dir, str[str.length - 1]);
+								File saveFile = new File(dir,
+										str[str.length - 1]);
 								if (!saveFile.exists()) {
 									FileInputStream fin = new FileInputStream(
 											filePaht);
@@ -162,12 +164,9 @@ public class MainAddActivity extends BaseActivity {
 									@Override
 									public void onClick(DialogInterface dialog,
 											int which) {
-										// ����¼�.
 										List<File> selectedFiles = null;
 										selectedFiles = fileBrowserView
 												.getSelectedFiles();
-
-										// ������ʾ��ǰ���� label
 										StringBuilder text = new StringBuilder(
 												"|");
 										if (selectedFiles == null)

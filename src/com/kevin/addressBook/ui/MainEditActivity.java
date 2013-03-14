@@ -41,13 +41,17 @@ public class MainEditActivity extends BaseActivity{
 	private EditText address;
 	private EditText sell;
 	private EditText ask;
+	private EditText qqNun;
+	private EditText mailBox;
+	private EditText url;
 	private Button edit;
+	private Button cancel;
 	private int isclicked=0;
 	private String filePaht;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);// ��������
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main_edit);
 		
 		Button  changePhoto=(Button) this.findViewById(R.id.main_edit_change_photo);
@@ -59,6 +63,9 @@ public class MainEditActivity extends BaseActivity{
 		 sell=(EditText) this.findViewById(R.id.main_edit_sell);
 		 ask=(EditText) this.findViewById(R.id.main_edit_ask);
 		final ImageView photo=(ImageView) this.findViewById(R.id.main_edit_photo);
+		qqNun = (EditText) this.findViewById(R.id.main_edit_qqNum);
+		mailBox = (EditText) this.findViewById(R.id.main_edit_mailbox);
+		url = (EditText) this.findViewById(R.id.main_edit_url);
 		
 		//获取得来的id
 		Intent intent = this.getIntent();
@@ -80,9 +87,55 @@ public class MainEditActivity extends BaseActivity{
 		sell.setInputType(InputType.TYPE_NULL);
 		ask.setText(addressInfo.getPurchaseInfo());
 		ask.setInputType(InputType.TYPE_NULL);
+		qqNun.setText(addressInfo.getQq());
+		qqNun.setInputType(InputType.TYPE_NULL);
+		mailBox.setText(addressInfo.getEmail());
+		mailBox.setInputType(InputType.TYPE_NULL);
+		url.setText(addressInfo.getWebSite());
+		url.setInputType(InputType.TYPE_NULL);
 		filePaht=addressInfo.getImageName();
 		Bitmap bitmap = BitmapFactory.decodeFile(filePaht);
 		photo.setImageBitmap(bitmap);
+		
+		cancel=(Button) this.findViewById(R.id.main_edit_cancel);
+		cancel.setText("返回");
+		cancel.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+			if(isclicked==0){
+				finish();
+			}else{
+				AddressInfo addressInfo=new AddressInfo();
+				addressInfo=XmlOptionsImp.getInstance().getUserDetails(toolID);
+				name.setText(addressInfo.getName());
+				name.setInputType(InputType.TYPE_NULL);
+				tel.setText(addressInfo.getPhoneNum());
+				tel.setInputType(InputType.TYPE_NULL);
+				job.setText(addressInfo.getPost());
+				job.setInputType(InputType.TYPE_NULL);
+				unit.setText(addressInfo.getCompany());
+				unit.setInputType(InputType.TYPE_NULL);
+				address.setText(addressInfo.getAddress());
+				address.setInputType(InputType.TYPE_NULL);
+				sell.setText(addressInfo.getSaleInfo());
+				sell.setInputType(InputType.TYPE_NULL);
+				ask.setText(addressInfo.getPurchaseInfo());
+				ask.setInputType(InputType.TYPE_NULL);
+				qqNun.setText(addressInfo.getQq());
+				qqNun.setInputType(InputType.TYPE_NULL);
+				mailBox.setText(addressInfo.getEmail());
+				mailBox.setInputType(InputType.TYPE_NULL);
+				url.setText(addressInfo.getWebSite());
+				url.setInputType(InputType.TYPE_NULL);
+				filePaht=addressInfo.getImageName();
+				Bitmap bitmap = BitmapFactory.decodeFile(filePaht);
+				photo.setImageBitmap(bitmap);
+				cancel.setText("返回");
+				isclicked=0;
+			}
+			}
+		});
 		
 		edit=(Button) this.findViewById(R.id.main_edit_save);
 		edit.setOnClickListener(new OnClickListener() {
@@ -97,7 +150,7 @@ public class MainEditActivity extends BaseActivity{
 					// 得到资源ID保存信息 或相应的操作
 					final EditText write=(EditText) dialog.findViewById(R.id.main_edit_dialog_mima);
 					ImageButton save=(ImageButton) dialog.findViewById(R.id.main_edit_dialog_save);
-					ImageButton cancel=(ImageButton) dialog.findViewById(R.id.main_edit_dialog_cancel);
+					ImageButton cancel1=(ImageButton) dialog.findViewById(R.id.main_edit_dialog_cancel);
 					// 确定按钮保存输入资源到数据库 并且跳转到浏览页面
 					save.setOnTouchListener(new CustomTouchListener() {
 						@Override
@@ -110,8 +163,12 @@ public class MainEditActivity extends BaseActivity{
 								address.setInputType(InputType.TYPE_CLASS_TEXT);
 								sell.setInputType(InputType.TYPE_CLASS_TEXT);
 								ask.setInputType(InputType.TYPE_CLASS_TEXT);
+								qqNun.setInputType(InputType.TYPE_CLASS_TEXT);
+								mailBox.setInputType(InputType.TYPE_CLASS_TEXT);
+								url.setInputType(InputType.TYPE_CLASS_TEXT);
 								edit.setText("保存");
 								isclicked=1;
+								cancel.setText("取消");
 							}else{
 								Toast.makeText(context, "密码错误！", Toast.LENGTH_SHORT).show();
 								edit.setText("修改");
@@ -122,9 +179,10 @@ public class MainEditActivity extends BaseActivity{
 					});
 
 					// 取消按钮不保存此信息 关闭对话框 跳转页面到拍照按钮页面
-					cancel.setOnTouchListener(new CustomTouchListener() {
+					cancel1.setOnTouchListener(new CustomTouchListener() {
 						@Override
 						public void eventAction(View arg0) {
+							
 							dialog.cancel();
 						}
 					});
@@ -139,6 +197,9 @@ public class MainEditActivity extends BaseActivity{
 					ai.setAddress(address.getText().toString());
 					ai.setSaleInfo(sell.getText().toString());
 					ai.setPurchaseInfo(ask.getText().toString());
+					ai.setQq(qqNun.getText().toString());
+					ai.setEmail(mailBox.getText().toString());
+					ai.setWebSite(url.getText().toString());
 					ai.setImageName(filePaht);
 					//得到图片路径并存入xml文件中 
 					try {
@@ -201,11 +262,8 @@ public class MainEditActivity extends BaseActivity{
 									@Override
 									public void onClick(DialogInterface dialog,
 											int which) {
-										// ����¼�.
 										List<File> selectedFiles = null;
 										selectedFiles = fileBrowserView.getSelectedFiles();
-
-										// ������ʾ��ǰ���� label
 										StringBuilder text = new StringBuilder(
 												"|");
 										if (selectedFiles == null)
@@ -232,7 +290,6 @@ public class MainEditActivity extends BaseActivity{
 								})
 						.setNegativeButton("取消",
 								new DialogInterface.OnClickListener() {
-
 									@Override
 									public void onClick(DialogInterface dialog,
 											int which) {

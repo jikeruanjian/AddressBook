@@ -95,7 +95,7 @@ public class MainActivity extends BaseActivity {
 
 					@Override
 					public void run() {
-						// dataList = XmlOptionsImp.getInstance().;
+//						 dataList = XmlOptionsImp.getInstance().;
 						// dataList = new ToolPDBll()
 						// .getAllCanStockCountSafeTools(index);
 						Message msg = new Message();
@@ -165,6 +165,42 @@ public class MainActivity extends BaseActivity {
 		System.gc();
 		System.gc();
 
+	}
+
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		showProgressDialog("正在初始化数据...");
+		// 初始化界面数据
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				if (dataList.size() == 0) {
+					System.out.println("重新装载了...");
+					// 初始化数据
+					String filePath = "/data"
+							+ Environment.getDataDirectory().getAbsolutePath()
+							+ "/" + "com.kevin.addressBook/"
+							+ "AddressBook.xml";
+					SharedPreferences preferences = getSharedPreferences(
+							"config", Context.MODE_PRIVATE);
+					filePath = preferences.getString("filePath", filePath);
+
+					File file = new File(filePath);
+					if (!file.exists()) {
+						DBFileImporter.importDB(context, filePath,
+								"AddressBook.xml");
+					}
+					XmlOptionsImp.setPath(filePath);
+					dataList = XmlOptionsImp.getInstance().getAllUsers();
+				}
+				hideProgressDialog();
+				Message msg = new Message();
+				msg.what = 0;
+				handler.sendMessage(msg);
+			}
+		}).start();
+		super.onStart();
 	}
 
 	@Override
