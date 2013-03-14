@@ -7,44 +7,50 @@ import com.kevin.addressBook.model.AddressInfo;
 /**
  * 
  * @author kevin
- *
+ * 
  */
 public interface IXmlOptions {
-	
+
 	/**
-	 * ��ȡ�����û�
-	 * @return ������Ч�û���List����
+	 * 获取到所有用户
+	 * 
+	 * @return 所有用户数据的List
 	 */
 	public List<AddressInfo> getAllUsers();
-	
+
 	/**
-	 * ͨ���û�ID��ȡһ���û�����ϸ��Ϣ
+	 * 获取某条数据的详细
+	 * 
 	 * @param id
 	 * @return addressInfo
 	 */
-	public AddressInfo getUserDetails(String id); 
-	
+	public AddressInfo getUserDetails(String id);
+
 	/**
-	 * ����һ���û�
+	 * 添加一个用户
+	 * 
 	 * @param user
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public Boolean addUser(AddressInfo user) throws IOException;
-	
+
 	/**
-	 * ͨ��IDɾ��һ���û�
+	 * 删除一个用户
+	 * 
 	 * @param id
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public Boolean deleteUser(String id) throws IOException;
-	
+
 	/**
-	 * �޸��û���Ϣ
+	 * 编辑用户信息
+	 * 
 	 * @param user
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
+	 * @throws Exception
 	 */
-	public Boolean editUser(AddressInfo user) throws IOException;
+	public Boolean editUser(AddressInfo user) throws IOException, Exception;
 }

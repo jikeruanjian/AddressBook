@@ -91,8 +91,11 @@ public class XmlOptionsImp implements IXmlOptions {
 	}
 
 	@Override
-	public Boolean editUser(AddressInfo user) throws IOException {
+	public Boolean editUser(AddressInfo user) throws Exception {
 		// TODO Auto-generated method stub
+		if (user.getId() == null || user.getId().equals("")) {
+			throw new Exception("未制定要修改信息的ID");
+		}
 		if (XmlUtility.editElement(doc.getRootElement(), user)) {
 			XmlUtility.writeDocumentToFile(doc, path);
 			return true;

@@ -8,6 +8,7 @@ import com.kevin.addressBook.bll.DBFileImporter;
 import com.kevin.addressBook.bll.XmlOptionsImp;
 import com.kevin.addressBook.model.AddressInfo;
 import com.kevin.addressBook.tools.CustomTouchListener;
+import com.kevin.addressBook.tools.PicTool;
 import com.kevin.addressBook.tools.SelectFiles;
 import com.kevin.addressBook.ui.MainActivity.MainActivityListAdapter.ViewHolder;
 import com.kevin.addressBook.R;
@@ -61,15 +62,15 @@ public class MainActivity extends BaseActivity {
 
 		EditText select = (EditText) this.findViewById(R.id.main_list_seacher);
 		list = (ListView) this.findViewById(R.id.main_list);
-//		Button add = (Button) this.findViewById(R.id.main_add);
+		// Button add = (Button) this.findViewById(R.id.main_add);
 
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
 				case 0: { // 重新加载数据
-				 list.setAdapter(new
-				 MainActivityListAdapter(context,DBFileImporter.searchWithKey(key, dataList)));
+					list.setAdapter(new MainActivityListAdapter(context,
+							DBFileImporter.searchWithKey(key, dataList)));
 					hideProgressDialog();
 					break;
 				}
@@ -121,15 +122,15 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 
-//		add.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				Intent intent = new Intent(context, MainAddActivity.class);
-////				context.startActivity(intent);
-//				startActivityForResult(intent, 3);
-//			}
-//		});
+		// add.setOnClickListener(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		// Intent intent = new Intent(context, MainAddActivity.class);
+		// // context.startActivity(intent);
+		// startActivityForResult(intent, 3);
+		// }
+		// });
 
 		showProgressDialog("正在初始化数据...");
 		// 初始化界面数据
@@ -143,6 +144,8 @@ public class MainActivity extends BaseActivity {
 							+ Environment.getDataDirectory().getAbsolutePath()
 							+ "/" + "com.kevin.addressBook/"
 							+ "AddressBook.xml";
+					System.out.println("dir:"
+							+ filePath.substring(0, filePath.lastIndexOf("/")));
 					SharedPreferences preferences = getSharedPreferences(
 							"config", Context.MODE_PRIVATE);
 					filePath = preferences.getString("filePath", filePath);
@@ -167,79 +170,80 @@ public class MainActivity extends BaseActivity {
 
 	}
 
-//	@Override
-//	protected void onStart() {
-//		System.out.println("运行了");
-//		showProgressDialog("正在初始化数据...");
-//		// 初始化界面数据
-//		new Thread(new Runnable() {
-//			@Override
-//			public void run() {
-//				if (dataList.size() == 0) {
-//					System.out.println("重新装载了...");
-//					// 初始化数据
-//					String filePath = "/data"
-//							+ Environment.getDataDirectory().getAbsolutePath()
-//							+ "/" + "com.kevin.addressBook/"
-//							+ "AddressBook.xml";
-//					SharedPreferences preferences = getSharedPreferences(
-//							"config", Context.MODE_PRIVATE);
-//					filePath = preferences.getString("filePath", filePath);
-//
-//					File file = new File(filePath);
-//					if (!file.exists()) {
-//						DBFileImporter.importDB(context, filePath,
-//								"AddressBook.xml");
-//					}
-//					XmlOptionsImp.setPath(filePath);
-//					dataList = XmlOptionsImp.getInstance().getAllUsers();
-//				}
-//				hideProgressDialog();
-//				Message msg = new Message();
-//				msg.what = 0;
-//				handler.sendMessage(msg);
-//			}
-//		}).start();
-//		super.onStart();
-//	}
+	// @Override
+	// protected void onStart() {
+	// System.out.println("运行了");
+	// showProgressDialog("正在初始化数据...");
+	// // 初始化界面数据
+	// new Thread(new Runnable() {
+	// @Override
+	// public void run() {
+	// if (dataList.size() == 0) {
+	// System.out.println("重新装载了...");
+	// // 初始化数据
+	// String filePath = "/data"
+	// + Environment.getDataDirectory().getAbsolutePath()
+	// + "/" + "com.kevin.addressBook/"
+	// + "AddressBook.xml";
+	// SharedPreferences preferences = getSharedPreferences(
+	// "config", Context.MODE_PRIVATE);
+	// filePath = preferences.getString("filePath", filePath);
+	//
+	// File file = new File(filePath);
+	// if (!file.exists()) {
+	// DBFileImporter.importDB(context, filePath,
+	// "AddressBook.xml");
+	// }
+	// XmlOptionsImp.setPath(filePath);
+	// dataList = XmlOptionsImp.getInstance().getAllUsers();
+	// }
+	// hideProgressDialog();
+	// Message msg = new Message();
+	// msg.what = 0;
+	// handler.sendMessage(msg);
+	// }
+	// }).start();
+	// super.onStart();
+	// }
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		//当resultCode==3时代表添加了一个用户返回，当resultCode==4的时候代表修改了用户，或者删除了用户，其他条件代表数据没有变化
-		if(resultCode == 3) {
-			System.out.println("888888888888888888运行了");
-			showProgressDialog("正在初始化数据...");
-			// 初始化界面数据
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					if (dataList.size() == 0) {
-						System.out.println("重新装载了...");
-						// 初始化数据
-						String filePath = "/data"
-								+ Environment.getDataDirectory().getAbsolutePath()
-								+ "/" + "com.kevin.addressBook/"
-								+ "AddressBook.xml";
-						SharedPreferences preferences = getSharedPreferences(
-								"config", Context.MODE_PRIVATE);
-						filePath = preferences.getString("filePath", filePath);
-
-						File file = new File(filePath);
-						if (!file.exists()) {
-							DBFileImporter.importDB(context, filePath,
-									"AddressBook.xml");
-						}
-						XmlOptionsImp.setPath(filePath);
-						dataList = XmlOptionsImp.getInstance().getAllUsers();
-					}
-					hideProgressDialog();
-					Message msg = new Message();
-					msg.what = 0;
-					handler.sendMessage(msg);
-				}
-			}).start();
-		}
+		// 当resultCode==3时代表添加了一个用户返回，当resultCode==4的时候代表修改了用户，或者删除了用户，其他条件代表数据没有变化
+//		if (resultCode == 3) {
+//			System.out.println("888888888888888888运行了");
+//			showProgressDialog("正在初始化数据...");
+//			// 初始化界面数据
+//			new Thread(new Runnable() {
+//				@Override
+//				public void run() {
+//					if (dataList.size() == 0) {
+//						System.out.println("重新装载了...");
+//						// 初始化数据
+//						String filePath = "/data"
+//								+ Environment.getDataDirectory()
+//										.getAbsolutePath() + "/"
+//								+ "com.kevin.addressBook/" + "AddressBook.xml";
+//
+//						SharedPreferences preferences = getSharedPreferences(
+//								"config", Context.MODE_PRIVATE);
+//						filePath = preferences.getString("filePath", filePath);
+//
+//						File file = new File(filePath);
+//						if (!file.exists()) {
+//							DBFileImporter.importDB(context, filePath,
+//									"AddressBook.xml");
+//						}
+//						XmlOptionsImp.setPath(filePath);
+//						dataList = XmlOptionsImp.getInstance().getAllUsers();
+//					}
+//					hideProgressDialog();
+//					Message msg = new Message();
+//					msg.what = 0;
+//					handler.sendMessage(msg);
+//				}
+//			}).start();
+//		}
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// getMenuInflater().inflate(R.menu.main, menu);
@@ -264,7 +268,7 @@ public class MainActivity extends BaseActivity {
 								@Override
 								public void onClick(DialogInterface dialog,
 										int which) {
-									
+
 									String filePath = (String) fileBrowserView
 											.getSelectedFiles();
 									System.out.println("得到的文件路径为：" + filePath);
@@ -274,7 +278,7 @@ public class MainActivity extends BaseActivity {
 									Editor editor = preferences.edit();
 									editor.putString("filePath", filePath);
 									XmlOptionsImp.setPath(filePath);
-									
+
 									dialog.cancel();
 								}
 							})
@@ -308,8 +312,9 @@ public class MainActivity extends BaseActivity {
 				@Override
 				public void eventAction(View arg0) {
 					if (write.getText().toString().equals("111111")) {
-						Intent intent = new Intent(context, MainAddActivity.class);
-//						context.startActivity(intent);
+						Intent intent = new Intent(context,
+								MainAddActivity.class);
+						// context.startActivity(intent);
 						startActivityForResult(intent, 3);
 						dialog.cancel();
 					}
@@ -327,6 +332,16 @@ public class MainActivity extends BaseActivity {
 		}
 		return super.onOptionsItemSelected(item);
 
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		dataList = XmlOptionsImp.getInstance().getAllUsers();
+		Message msg = new Message();
+		msg.what = 0;
+		handler.sendMessage(msg);
 	}
 
 	class MainActivityListAdapter extends ListAdapter {
@@ -361,27 +376,31 @@ public class MainActivity extends BaseActivity {
 			AddressInfo entity = (AddressInfo) dataList.get(position);
 			holder.name.setText("姓名：" + entity.getName());
 			holder.tel.setText("电话：" + entity.getPhoneNum());
-			String path = entity.getImageName();
-			if (!path.equals("")) {
-				
-				BitmapFactory.Options options = new BitmapFactory.Options();
-				options.inJustDecodeBounds = true;
-				// 获取这个图片的宽和高
-				Bitmap bitmap = BitmapFactory.decodeFile(entity.getImageName(), options); //此时返回bm为空
-				options.inJustDecodeBounds = false;
-				//计算缩放比
-				int be = (int)(options.outHeight / (float)200);
-				if (be <= 0)
-					be = 1;
-				options.inSampleSize = be;
-				//重新读入图片，注意这次要把options.inJustDecodeBounds 设为 false哦
-				bitmap=BitmapFactory.decodeFile(entity.getImageName(),options);
-				
-//				Bitmap bitmap = BitmapFactory.decodeFile(entity.getImageName());
-				holder.photo.setImageBitmap(bitmap);
+
+			if (!entity.getName().equals("")) {
+				String path = XmlOptionsImp.getPath().substring(0,
+						XmlOptionsImp.getPath().lastIndexOf("/") + 1)
+						+ "AddressBookPic/" + entity.getImageName(); // 得到全路劲
+				// BitmapFactory.Options options = new BitmapFactory.Options();
+				// options.inJustDecodeBounds = true;
+				// // 获取这个图片的宽和高
+				// Bitmap bitmap = BitmapFactory.decodeFile(path, options); //
+				// 此时返回bm为空
+				// options.inJustDecodeBounds = false;
+				// // 计算缩放比
+				// int be = (int) (options.outHeight / (float) 200);
+				// if (be <= 0)
+				// be = 1;
+				// options.inSampleSize = be;
+				// // 重新读入图片，注意这次要把options.inJustDecodeBounds 设为 false哦
+				// bitmap = BitmapFactory.decodeFile(path, options);
+
+				// Bitmap bitmap =
+				// BitmapFactory.decodeFile(entity.getImageName());
+				holder.photo.setImageBitmap(PicTool.decodeFile(new File(path)));
 			} else {
 				holder.photo.setImageResource(R.drawable.ic_launcher);
-//				holder.photo.setImageResource(R.drawable.dir);
+				// holder.photo.setImageResource(R.drawable.dir);
 			}
 
 			((MainActivity) context).setIOSListItemBg(position, getCount(),

@@ -47,7 +47,7 @@ public class MainAddActivity extends BaseActivity {
 	private EditText mailBox;
 	private EditText url;
 	private ImageView photo;
-	private String filePaht="";
+	private String filePaht = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +84,7 @@ public class MainAddActivity extends BaseActivity {
 				ai.setQq(qqNun.getText().toString());
 				ai.setEmail(mailBox.getText().toString());
 				ai.setWebSite(url.getText().toString());
-				ai.setImageName(filePaht);
+				ai.setImageName(filePaht.substring(filePaht.lastIndexOf("/") + 1));
 				// 得到图片路径并存入xml文件中
 				try {
 					if (XmlOptionsImp.getInstance().addUser(ai)) {
@@ -151,41 +151,33 @@ public class MainAddActivity extends BaseActivity {
 		photo.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent=new Intent();
+				Intent intent = new Intent();
 				intent.setAction(Intent.ACTION_GET_CONTENT);
 				intent.setType("image/*");
-				startActivityForResult(Intent.createChooser(intent, "SelectPicture"),1);
-				
-	/*			showProgressDialog("请稍等...");
-				final SelectImages fileBrowserView = new SelectImages(
-						MainAddActivity.this);
-				builder = new AlertDialog.Builder(MainAddActivity.this)
-						.setIcon(R.drawable.ic_launcher)
-						.setTitle("选择相片（jpg、png、gif）")
-						.setView(fileBrowserView)
-						.setPositiveButton("确定",
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										String filePaht = fileBrowserView.getSelectedFiles();
-										Bitmap bitmap = BitmapFactory.decodeFile(filePaht);
-										photo.setImageBitmap(bitmap);
-										dialog.cancel();
-									}
-								})
-						.setNegativeButton("取消",
-								new DialogInterface.OnClickListener() {
+				startActivityForResult(
+						Intent.createChooser(intent, "SelectPicture"), 1);
 
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										dialog.cancel();
-									}
-								});
-				alertDialog = builder.create();
-				alertDialog.show();
-				hideProgressDialog();*/
+				/*
+				 * showProgressDialog("请稍等..."); final SelectImages
+				 * fileBrowserView = new SelectImages( MainAddActivity.this);
+				 * builder = new AlertDialog.Builder(MainAddActivity.this)
+				 * .setIcon(R.drawable.ic_launcher)
+				 * .setTitle("选择相片（jpg、png、gif）") .setView(fileBrowserView)
+				 * .setPositiveButton("确定", new
+				 * DialogInterface.OnClickListener() {
+				 * 
+				 * @Override public void onClick(DialogInterface dialog, int
+				 * which) { String filePaht =
+				 * fileBrowserView.getSelectedFiles(); Bitmap bitmap =
+				 * BitmapFactory.decodeFile(filePaht);
+				 * photo.setImageBitmap(bitmap); dialog.cancel(); } })
+				 * .setNegativeButton("取消", new
+				 * DialogInterface.OnClickListener() {
+				 * 
+				 * @Override public void onClick(DialogInterface dialog, int
+				 * which) { dialog.cancel(); } }); alertDialog =
+				 * builder.create(); alertDialog.show(); hideProgressDialog();
+				 */
 			}
 		});
 
@@ -198,31 +190,34 @@ public class MainAddActivity extends BaseActivity {
 			finish();
 		}
 		return true;
-		
+
 	}
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
-		  if (requestCode == 1){  
-				Bitmap myBitmap = (Bitmap) map(data);  
-				photo.setImageBitmap(myBitmap);
-		  }
+		if (requestCode == 1) {
+			Bitmap myBitmap = (Bitmap) map(data);
+			photo.setImageBitmap(myBitmap);
+		}
 	}
-	public Bitmap map(Intent data) {  
-        Uri selectedImage = data.getData();  
-        String[] filePathColumn = { MediaStore.Images.Media.DATA };  
-        Cursor cursor = context.getContentResolver().query(selectedImage,  
-                filePathColumn, null, null, null);  
-        cursor.moveToFirst();  
-        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);  
-        String picturePath = cursor.getString(columnIndex);  
-        System.out.println("****************picturePath="+picturePath);
-        filePaht=picturePath;
-        cursor.close();  
-        Log.d("picturePath", picturePath);  
-        return BitmapFactory.decodeFile(picturePath);  
-    }  
+
+	public Bitmap map(Intent data) {
+		Uri selectedImage = data.getData();
+		String[] filePathColumn = { MediaStore.Images.Media.DATA };
+		Cursor cursor = context.getContentResolver().query(selectedImage,
+				filePathColumn, null, null, null);
+		cursor.moveToFirst();
+		int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+		String picturePath = cursor.getString(columnIndex);
+		System.out.println("****************picturePath=" + picturePath);
+		filePaht = picturePath;
+		cursor.close();
+		Log.d("picturePath", picturePath);
+		return BitmapFactory.decodeFile(picturePath);
+	}
+
 	/** 自定义拷贝文件 */
 	private void copyfile(FileInputStream fin, FileOutputStream fou)
 			throws IOException {

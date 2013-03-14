@@ -52,8 +52,10 @@ public class MainEditActivity extends BaseActivity {
 	private Button edit;
 	private Button cancel;
 	private int isclicked = 0;
-	private String filePaht;
-    private  ImageView photo ;
+	private String filePath;
+	private ImageView photo;
+	private AddressInfo addressInfo = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,7 +69,7 @@ public class MainEditActivity extends BaseActivity {
 		address = (EditText) this.findViewById(R.id.main_edit_adds);
 		sell = (EditText) this.findViewById(R.id.main_edit_sell);
 		ask = (EditText) this.findViewById(R.id.main_edit_ask);
-		photo= (ImageView) this.findViewById(R.id.main_edit_photo);
+		photo = (ImageView) this.findViewById(R.id.main_edit_photo);
 		qqNun = (EditText) this.findViewById(R.id.main_edit_qqNum);
 		mailBox = (EditText) this.findViewById(R.id.main_edit_mailbox);
 		url = (EditText) this.findViewById(R.id.main_edit_url);
@@ -75,33 +77,34 @@ public class MainEditActivity extends BaseActivity {
 		// 获取得来的id
 		Intent intent = this.getIntent();
 		toolID = intent.getStringExtra("toolID");
-		AddressInfo addressInfo = new AddressInfo();
 		addressInfo = XmlOptionsImp.getInstance().getUserDetails(toolID);
-//        if(addressInfo==null){
-    		name.setText(addressInfo.getName());
-    		name.setInputType(InputType.TYPE_NULL);
-    		tel.setText(addressInfo.getPhoneNum());
-    		tel.setInputType(InputType.TYPE_NULL);
-    		job.setText(addressInfo.getPost());
-    		job.setInputType(InputType.TYPE_NULL);
-    		unit.setText(addressInfo.getCompany());
-    		unit.setInputType(InputType.TYPE_NULL);
-    		address.setText(addressInfo.getAddress());
-    		address.setInputType(InputType.TYPE_NULL);
-    		sell.setText(addressInfo.getSaleInfo());
-    		sell.setInputType(InputType.TYPE_NULL);
-    		ask.setText(addressInfo.getPurchaseInfo());
-    		ask.setInputType(InputType.TYPE_NULL);
-    		qqNun.setText(addressInfo.getQq());
-    		qqNun.setInputType(InputType.TYPE_NULL);
-    		mailBox.setText(addressInfo.getEmail());
-    		mailBox.setInputType(InputType.TYPE_NULL);
-    		url.setText(addressInfo.getWebSite());
-    		url.setInputType(InputType.TYPE_NULL);
-    		filePaht = addressInfo.getImageName();
-    		Bitmap bitmap = BitmapFactory.decodeFile(filePaht);
-    		photo.setImageBitmap(bitmap);	
-//        }
+
+		name.setText(addressInfo.getName());
+		name.setInputType(InputType.TYPE_NULL);
+		tel.setText(addressInfo.getPhoneNum());
+		tel.setInputType(InputType.TYPE_NULL);
+		job.setText(addressInfo.getPost());
+		job.setInputType(InputType.TYPE_NULL);
+		unit.setText(addressInfo.getCompany());
+		unit.setInputType(InputType.TYPE_NULL);
+		address.setText(addressInfo.getAddress());
+		address.setInputType(InputType.TYPE_NULL);
+		sell.setText(addressInfo.getSaleInfo());
+		sell.setInputType(InputType.TYPE_NULL);
+		ask.setText(addressInfo.getPurchaseInfo());
+		ask.setInputType(InputType.TYPE_NULL);
+		qqNun.setText(addressInfo.getQq());
+		qqNun.setInputType(InputType.TYPE_NULL);
+		mailBox.setText(addressInfo.getEmail());
+		mailBox.setInputType(InputType.TYPE_NULL);
+		url.setText(addressInfo.getWebSite());
+		url.setInputType(InputType.TYPE_NULL);
+		filePath = XmlOptionsImp.getPath().substring(0,
+				XmlOptionsImp.getPath().lastIndexOf("/") + 1)+"AddressBookPic/"
+				+ addressInfo.getImageName();
+		Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+		photo.setImageBitmap(bitmap);
+
 		cancel = (Button) this.findViewById(R.id.main_edit_cancel);
 		cancel.setText("返回");
 		cancel.setOnClickListener(new OnClickListener() {
@@ -134,8 +137,8 @@ public class MainEditActivity extends BaseActivity {
 					mailBox.setInputType(InputType.TYPE_NULL);
 					url.setText(addressInfo.getWebSite());
 					url.setInputType(InputType.TYPE_NULL);
-					filePaht = addressInfo.getImageName();
-					Bitmap bitmap = BitmapFactory.decodeFile(filePaht);
+					filePath = addressInfo.getImageName();
+					Bitmap bitmap = BitmapFactory.decodeFile(filePath);
 					photo.setImageBitmap(bitmap);
 					cancel.setText("返回");
 					isclicked = 0;
@@ -198,23 +201,20 @@ public class MainEditActivity extends BaseActivity {
 					});
 
 				} else {
-					AddressInfo ai = new AddressInfo();
-					System.out.println("==========="
-							+ name.getText().toString());
-					ai.setName(name.getText().toString());
-					ai.setPhoneNum(tel.getText().toString());
-					ai.setPost(job.getText().toString());
-					ai.setCompany(unit.getText().toString());
-					ai.setAddress(address.getText().toString());
-					ai.setSaleInfo(sell.getText().toString());
-					ai.setPurchaseInfo(ask.getText().toString());
-					ai.setQq(qqNun.getText().toString());
-					ai.setEmail(mailBox.getText().toString());
-					ai.setWebSite(url.getText().toString());
-					ai.setImageName(filePaht);
-					// 得到图片路径并存入xml文件中
+					addressInfo.setName(name.getText().toString());
+					addressInfo.setPhoneNum(tel.getText().toString());
+					addressInfo.setPost(job.getText().toString());
+					addressInfo.setCompany(unit.getText().toString());
+					addressInfo.setAddress(address.getText().toString());
+					addressInfo.setSaleInfo(sell.getText().toString());
+					addressInfo.setPurchaseInfo(ask.getText().toString());
+					addressInfo.setQq(qqNun.getText().toString());
+					addressInfo.setEmail(mailBox.getText().toString());
+					addressInfo.setWebSite(url.getText().toString());
+					addressInfo.setImageName(filePath.substring(filePath
+							.lastIndexOf("/") + 1));
 					try {
-						if (XmlOptionsImp.getInstance().editUser(ai)) {
+						if (XmlOptionsImp.getInstance().editUser(addressInfo)) {
 							// 将此图片复制到存xml的文件夹下
 							if (Environment.getExternalStorageState().equals(
 									Environment.MEDIA_MOUNTED)) {
@@ -228,13 +228,13 @@ public class MainEditActivity extends BaseActivity {
 								if (!files.isDirectory()) {
 									files.mkdirs();
 								}
-								String str[] = filePaht.split("/");
+								String str[] = filePath.split("/");
 								try {
 									File saveFile = new File(dir,
 											str[str.length - 1]);
 									if (!saveFile.exists()) {
 										FileInputStream fin = new FileInputStream(
-												filePaht);
+												filePath);
 										FileOutputStream outStream = new FileOutputStream(
 												saveFile);
 										copyfile(fin, outStream);// 调用自定义拷贝文件方法
@@ -251,9 +251,8 @@ public class MainEditActivity extends BaseActivity {
 							Toast.makeText(context, "修改失败！", Toast.LENGTH_SHORT)
 									.show();
 						}
-					} catch (IOException e) {
-						// Toast.makeText(context, "修改失败！",
-						// Toast.LENGTH_SHORT).show();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					// 保存成功后跳转到主页面
@@ -274,7 +273,7 @@ public class MainEditActivity extends BaseActivity {
 				startActivityForResult(
 						Intent.createChooser(intent, "SelectPicture"), 1);
 
-			    /*	
+				/*
 				 * showProgressDialog("请稍等..."); final SelectImages
 				 * fileBrowserView = new SelectImages( MainEditActivity.this);
 				 * builder = new AlertDialog.Builder(MainEditActivity.this)
@@ -332,7 +331,7 @@ public class MainEditActivity extends BaseActivity {
 		int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
 		String picturePath = cursor.getString(columnIndex);
 		System.out.println("****************picturePath=" + picturePath);
-		filePaht = picturePath;
+		filePath = picturePath;
 		cursor.close();
 		Log.d("picturePath", picturePath);
 		return BitmapFactory.decodeFile(picturePath);
