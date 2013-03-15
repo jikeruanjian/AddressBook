@@ -170,80 +170,6 @@ public class MainActivity extends BaseActivity {
 
 	}
 
-	// @Override
-	// protected void onStart() {
-	// System.out.println("运行了");
-	// showProgressDialog("正在初始化数据...");
-	// // 初始化界面数据
-	// new Thread(new Runnable() {
-	// @Override
-	// public void run() {
-	// if (dataList.size() == 0) {
-	// System.out.println("重新装载了...");
-	// // 初始化数据
-	// String filePath = "/data"
-	// + Environment.getDataDirectory().getAbsolutePath()
-	// + "/" + "com.kevin.addressBook/"
-	// + "AddressBook.xml";
-	// SharedPreferences preferences = getSharedPreferences(
-	// "config", Context.MODE_PRIVATE);
-	// filePath = preferences.getString("filePath", filePath);
-	//
-	// File file = new File(filePath);
-	// if (!file.exists()) {
-	// DBFileImporter.importDB(context, filePath,
-	// "AddressBook.xml");
-	// }
-	// XmlOptionsImp.setPath(filePath);
-	// dataList = XmlOptionsImp.getInstance().getAllUsers();
-	// }
-	// hideProgressDialog();
-	// Message msg = new Message();
-	// msg.what = 0;
-	// handler.sendMessage(msg);
-	// }
-	// }).start();
-	// super.onStart();
-	// }
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		// 当resultCode==3时代表添加了一个用户返回，当resultCode==4的时候代表修改了用户，或者删除了用户，其他条件代表数据没有变化
-//		if (resultCode == 3) {
-//			System.out.println("888888888888888888运行了");
-//			showProgressDialog("正在初始化数据...");
-//			// 初始化界面数据
-//			new Thread(new Runnable() {
-//				@Override
-//				public void run() {
-//					if (dataList.size() == 0) {
-//						System.out.println("重新装载了...");
-//						// 初始化数据
-//						String filePath = "/data"
-//								+ Environment.getDataDirectory()
-//										.getAbsolutePath() + "/"
-//								+ "com.kevin.addressBook/" + "AddressBook.xml";
-//
-//						SharedPreferences preferences = getSharedPreferences(
-//								"config", Context.MODE_PRIVATE);
-//						filePath = preferences.getString("filePath", filePath);
-//
-//						File file = new File(filePath);
-//						if (!file.exists()) {
-//							DBFileImporter.importDB(context, filePath,
-//									"AddressBook.xml");
-//						}
-//						XmlOptionsImp.setPath(filePath);
-//						dataList = XmlOptionsImp.getInstance().getAllUsers();
-//					}
-//					hideProgressDialog();
-//					Message msg = new Message();
-//					msg.what = 0;
-//					handler.sendMessage(msg);
-//				}
-//			}).start();
-//		}
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// getMenuInflater().inflate(R.menu.main, menu);
@@ -293,6 +219,7 @@ public class MainActivity extends BaseActivity {
 							});
 			alertDialog = builder.create();
 			alertDialog.show();
+			break;
 		case 2:
 
 			// 弹出对话框输入密码后验证通过才能改
@@ -312,8 +239,7 @@ public class MainActivity extends BaseActivity {
 				@Override
 				public void eventAction(View arg0) {
 					if (write.getText().toString().equals("111111")) {
-						Intent intent = new Intent(context,
-								MainAddActivity.class);
+						Intent intent = new Intent(context,MainAddActivity.class);
 						// context.startActivity(intent);
 						startActivityForResult(intent, 3);
 						dialog.cancel();

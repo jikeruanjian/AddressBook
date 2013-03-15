@@ -72,68 +72,17 @@ public class MainAddActivity extends BaseActivity {
 		save.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				AddressInfo ai = new AddressInfo();
-				System.out.println("===========" + name.getText().toString());
-				ai.setName(name.getText().toString());
-				ai.setPhoneNum(tel.getText().toString());
-				ai.setPost(job.getText().toString());
-				ai.setCompany(unit.getText().toString());
-				ai.setAddress(address.getText().toString());
-				ai.setSaleInfo(sell.getText().toString());
-				ai.setPurchaseInfo(ask.getText().toString());
-				ai.setQq(qqNun.getText().toString());
-				ai.setEmail(mailBox.getText().toString());
-				ai.setWebSite(url.getText().toString());
-				ai.setImageName(filePaht.substring(filePaht.lastIndexOf("/") + 1));
-				// 得到图片路径并存入xml文件中
-				try {
-					if (XmlOptionsImp.getInstance().addUser(ai)) {
-						// 将此图片复制到存xml的文件夹下
-						if (Environment.getExternalStorageState().equals(
-								Environment.MEDIA_MOUNTED)) {
-							// 在sd卡中创建picasa文件夹
-							String dir = XmlOptionsImp.getPath().substring(0,
-									XmlOptionsImp.getPath().lastIndexOf("/"))
-									+ "/AddressBookPic";
-							File files = new File(dir);
-							if (!files.isDirectory()) {
-								files.mkdirs();
-							}
-							String str[] = filePaht.split("/");
-							try {
-								File saveFile = new File(dir,
-										str[str.length - 1]);
-								if (!saveFile.exists()) {
-									FileInputStream fin = new FileInputStream(
-											filePaht);
-									FileOutputStream outStream = new FileOutputStream(
-											saveFile);
-									copyfile(fin, outStream);// 调用自定义拷贝文件方法
-								}
-							} catch (FileNotFoundException e) {
-								e.printStackTrace();
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						}
-
-						Toast.makeText(context, "添加成功！", Toast.LENGTH_SHORT)
-								.show();
-					} else {
-						Toast.makeText(context, "添加失败！", Toast.LENGTH_SHORT)
-								.show();
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
+				save();
+				finish();
 			}
+
 		});
 
 		Button cancel = (Button) this.findViewById(R.id.main_edit_cancel);
 		cancel.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				save();
 				name.setText("");
 				tel.setText("");
 				job.setText("");
@@ -200,6 +149,60 @@ public class MainAddActivity extends BaseActivity {
 		if (requestCode == 1) {
 			Bitmap myBitmap = (Bitmap) map(data);
 			photo.setImageBitmap(myBitmap);
+		}
+	}
+
+	private void save() {
+		// TODO Auto-generated method stub
+		AddressInfo ai = new AddressInfo();
+		System.out.println("===========" + name.getText().toString());
+		ai.setName(name.getText().toString());
+		ai.setPhoneNum(tel.getText().toString());
+		ai.setPost(job.getText().toString());
+		ai.setCompany(unit.getText().toString());
+		ai.setAddress(address.getText().toString());
+		ai.setSaleInfo(sell.getText().toString());
+		ai.setPurchaseInfo(ask.getText().toString());
+		ai.setQq(qqNun.getText().toString());
+		ai.setEmail(mailBox.getText().toString());
+		ai.setWebSite(url.getText().toString());
+		ai.setImageName(filePaht.substring(filePaht.lastIndexOf("/") + 1));
+		// 得到图片路径并存入xml文件中
+		try {
+			if (XmlOptionsImp.getInstance().addUser(ai)) {
+				// 将此图片复制到存xml的文件夹下
+				if (Environment.getExternalStorageState().equals(
+						Environment.MEDIA_MOUNTED)) {
+					// 在sd卡中创建picasa文件夹
+					String dir = XmlOptionsImp.getPath().substring(0,
+							XmlOptionsImp.getPath().lastIndexOf("/"))
+							+ "/AddressBookPic";
+					File files = new File(dir);
+					if (!files.isDirectory()) {
+						files.mkdirs();
+					}
+					String str[] = filePaht.split("/");
+					try {
+						File saveFile = new File(dir, str[str.length - 1]);
+						if (!saveFile.exists()) {
+							FileInputStream fin = new FileInputStream(filePaht);
+							FileOutputStream outStream = new FileOutputStream(
+									saveFile);
+							copyfile(fin, outStream);// 调用自定义拷贝文件方法
+						}
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				finish();
+				Toast.makeText(context, "添加成功！", Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(context, "添加失败！", Toast.LENGTH_SHORT).show();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
