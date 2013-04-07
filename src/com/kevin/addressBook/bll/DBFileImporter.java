@@ -6,8 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.apache.http.util.ByteArrayBuffer;
@@ -60,6 +58,8 @@ public class DBFileImporter {
 	 */
 	public static List<AddressInfo> searchWithKey(String key,
 			List<AddressInfo> allInfos) {
+		if (key == null || key.equals(""))
+			return allInfos;
 		List<AddressInfo> result = new ArrayList<AddressInfo>();
 		for (AddressInfo addressInfo : allInfos) {
 			if (addressInfo.getName().contains(key)) {

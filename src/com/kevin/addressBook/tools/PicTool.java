@@ -3,6 +3,8 @@ package com.kevin.addressBook.tools;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,27 +12,29 @@ import android.graphics.BitmapFactory;
 public class PicTool {
 	public static Bitmap decodeFile(File f) {
 		try {
-			// decode image size
+			InputStream is = new FileInputStream(f);
 			BitmapFactory.Options o = new BitmapFactory.Options();
 			o.inJustDecodeBounds = true;
-			BitmapFactory.decodeStream(new FileInputStream(f), null, o);
-			// Find the correct scale value. It should be the power of 2.
+			BitmapFactory.decodeStream(is, null, o);
 			final int REQUIRED_SIZE = 60;
 			int width_tmp = o.outWidth, height_tmp = o.outHeight;
-			int scale = 1;
-			while (true) {
-				if (width_tmp / 2 < REQUIRED_SIZE
-						|| height_tmp / 2 < REQUIRED_SIZE)
-					break;
-				width_tmp /= 2;
-				height_tmp /= 2;
-				scale *= 2;
+			int inSampleSize = 1;
+			if (height_tmp > REQUIRED_SIZE || width_tmp > REQUIRED_SIZE) {
+				if (width_tmp > height_tmp) {
+					inSampleSize = Math.round((float) height_tmp
+							/ (float) REQUIRED_SIZE);
+				} else {
+					inSampleSize = Math.round((float) width_tmp
+							/ (float) REQUIRED_SIZE);
+				}
 			}
-			// decode with inSampleSize
-			BitmapFactory.Options o2 = new BitmapFactory.Options();
-			o2.inSampleSize = scale;
-			return BitmapFactory.decodeStream(new FileInputStream(f), null, o2);
+			o.inSampleSize = inSampleSize;
+			o.inJustDecodeBounds = false;
+			return BitmapFactory.decodeStream(new FileInputStream(f), null, o);
 		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return null;
 	}

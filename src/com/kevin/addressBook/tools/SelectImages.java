@@ -1,15 +1,11 @@
 package com.kevin.addressBook.tools;
 
 import java.io.File;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.Stack;
-
 import com.kevin.addressBook.R;
 
 import android.content.Context;
@@ -19,7 +15,6 @@ import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -176,7 +171,7 @@ public class SelectImages extends ListView {
 			}
 
 			for (int i = 0; i < listBitmap.size() - showCount; i++) {
-				Bitmap bitmap = (Bitmap) listBitmap.get(i);
+				Bitmap bitmap = listBitmap.get(i);
 				// 这里就开始释放bitmap 所占的内存了
 				if (bitmap != null) {
 					if (!bitmap.isRecycled()) {

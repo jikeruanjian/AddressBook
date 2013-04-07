@@ -2,8 +2,11 @@ package com.kevin.addressBook.model;
 
 public class Const {
 
+	public static String dataBaseUrl = "";
+	public static String imageDir = "";
+
 	public static final class AddressInfo {
-		public static final String ROWNAME = "addressInfo";
+		public static final String ROWNAME = "AddressInfo";
 		public static final String ID = "id";
 		public static final String NAME = "name";
 		public static final String POST = "post";

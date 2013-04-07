@@ -7,8 +7,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.Stack;
-
 import com.kevin.addressBook.R;
 
 import android.content.Context;
@@ -16,7 +14,6 @@ import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -101,15 +98,15 @@ public class SelectFiles extends ListView {
 				file_name.setText(path.substring(indext));
 				String unite = "";
 				// 得到文件的大小
-				double size = (double) f.length() / (1024.00 * 1024.00);
+				double size = f.length() / (1024.00 * 1024.00);
 				// 根据文件的大小文件的给文件设置单位
 				if (size < 1) {
-					size = (double) f.length() / 1024.00;
+					size = f.length() / 1024.00;
 
 					unite = new DecimalFormat("###,###,###.##").format(size)
 							+ "Kb";
 				} else {
-					size = (double) f.length() / (1024.00 * 1024.00);
+					size = f.length() / (1024.00 * 1024.00);
 					unite = new DecimalFormat("###,###,###.##").format(size)
 							+ "MB";
 				}

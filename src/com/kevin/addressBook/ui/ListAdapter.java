@@ -1,5 +1,6 @@
 package com.kevin.addressBook.ui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,9 +15,8 @@ import android.widget.BaseAdapter;
 public abstract class ListAdapter extends BaseAdapter {
 
 	protected LayoutInflater mInflater;
-	protected List datas;
+	protected List datas = new ArrayList();
 	protected Context context;
-	public HashMap<Integer, View> views = new HashMap<Integer, View>();
 
 	public ListAdapter(Context context, List datas) {
 		this.context = context;
@@ -39,11 +39,6 @@ public abstract class ListAdapter extends BaseAdapter {
 		return position;
 	}
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		return null;
-	}
-
 	public void setIOSListItemBg(int position, int count, View view) {
 		if (count > 1) {
 			if (position == 0) {
@@ -56,6 +51,5 @@ public abstract class ListAdapter extends BaseAdapter {
 		} else {
 			view.setBackgroundResource(R.drawable.item_bg_selector);
 		}
-
 	}
 }

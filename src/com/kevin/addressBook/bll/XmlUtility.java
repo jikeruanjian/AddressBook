@@ -1,8 +1,11 @@
 package com.kevin.addressBook.bll;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -29,10 +32,15 @@ public class XmlUtility {
 		SAXReader reader = new SAXReader();
 		Document document = null;
 		try {
-			document = reader.read(file);
+			InputStream is = new FileInputStream(file);
+			document = reader.read(is);
 		} catch (DocumentException e) {
+			e.printStackTrace();
 			document = DocumentHelper.createDocument();
 			document.addElement("list");// 添加根节点
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return document;
 	}
@@ -179,9 +187,11 @@ public class XmlUtility {
 								att.setText(addressInfo.getWebSite());
 							}
 						}
+						return true;
 					}
+
 				}
-				return true;
+
 			}
 		}
 		return false;

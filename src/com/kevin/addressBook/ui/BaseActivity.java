@@ -9,7 +9,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
-import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,7 +36,6 @@ public class BaseActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		context = this;
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 	}
 
 	protected void setListViewHeight(ListView lv) {
@@ -55,27 +53,6 @@ public class BaseActivity extends Activity {
 		ViewGroup.LayoutParams lp = lv.getLayoutParams();
 		lp.height = h + (lv.getDividerHeight() * (cnt - 1));
 		lv.setLayoutParams(lp);
-	}
-
-	/**
-	 * 设置圆角风格listview的�?中条
-	 * 
-	 * @param position
-	 * @param count
-	 * @param view
-	 */
-	public void setIOSListItemBg(int position, int count, View view) {
-		if (count > 1) {
-			if (position == 0) {
-				view.setBackgroundResource(R.drawable.item_bg_selector_head);
-			} else if (position == count - 1) {
-				view.setBackgroundResource(R.drawable.item_bg_selector_foot);
-			} else {
-				view.setBackgroundResource(R.drawable.item_bg_selector_middle);
-			}
-		} else {
-			view.setBackgroundResource(R.drawable.item_bg_selector);
-		}
 	}
 
 	public void showProgressDialog(String text) {
@@ -132,6 +109,7 @@ public class BaseActivity extends Activity {
 		}
 
 	}
+
 	public void setProgressText(String text) {
 		View v = progressDialog.getWindow().getDecorView();
 		if (text == null) {
